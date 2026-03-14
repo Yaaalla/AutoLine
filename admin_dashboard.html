@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AutoLux Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#c9a96e",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#1e1a14",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        .chart-gradient {
+            background: linear-gradient(180deg, rgba(201, 169, 110, 0.2) 0%, rgba(201, 169, 110, 0) 100%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased font-display">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 flex-shrink-0 bg-slate-50 dark:bg-slate-900/50 border-r border-slate-200 dark:border-slate-800 flex flex-col">
+<a href="index.html" class="p-6 flex items-center gap-3">
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center text-background-dark">
+<span class="material-symbols-outlined font-bold">directions_car</span>
+</div>
+<div>
+<h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white leading-none">AutoLux</h1>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Premium Fleet</p>
+</div>
+</a>
+<nav class="flex-1 px-4 py-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary text-background-dark font-semibold" href="admin_dashboard.html">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" href="booking_flow.html">
+<span class="material-symbols-outlined">calendar_today</span>
+<span>Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" href="vehicles_gallery.html">
+<span class="material-symbols-outlined">minor_crash</span>
+<span>Fleet</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span>Revenue</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Customers</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 p-2 rounded-xl bg-slate-100 dark:bg-slate-800/50">
+<img alt="Admin Profile" class="size-10 rounded-full object-cover border-2 border-primary/20" data-alt="Professional headshot of a male administrative manager" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7L9cUQ55y7B1PXLy7Pv77tl4C9olI1tkOvyF6TmJqo_EFTmGNBE33ioAcDM6LlTwHY_6010o7Ud4I2erPhKuYc_5QzD8_52avaT7SeYywN64OaKjgVyUNKY58CjoBhp86eWuJkMBkrqVwNcBgO5wtHz1i1ba0cuUpxZcYl-AG0IyMlkZisxKZtvK-Ba32aI4gKuqweb0ZAANUWQX7ILdjTVI33NNeoKaCHJDnv3AmjlRVVbYT8xl8Xkp9FrtZ119XIfEii4C88Jqr"/>
+<div class="flex flex-col overflow-hidden">
+<span class="text-sm font-bold truncate">James Wilson</span>
+<span class="text-xs text-slate-500 truncate">Senior Admin</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+<!-- Top Header -->
+<header class="h-16 flex items-center justify-between px-8 border-b border-slate-200 dark:border-slate-800 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md sticky top-0 z-10">
+<div class="flex items-center gap-4">
+<h2 class="text-xl font-bold">Dashboard Overview</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm w-64 focus:ring-2 focus:ring-primary/50" placeholder="Search bookings..." type="text"/>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-background-dark px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+                        Add New Car
+                    </button>
+<button class="relative p-2 text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-background-dark"></span>
+</button>
+</div>
+</header>
+<div class="p-8 space-y-8">
+<!-- KPI Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between mb-4">
+<span class="text-slate-500 dark:text-slate-400 text-sm font-medium">Total Revenue</span>
+<div class="size-8 rounded-lg bg-green-500/10 flex items-center justify-center text-green-500">
+<span class="material-symbols-outlined text-lg">trending_up</span>
+</div>
+</div>
+<h3 class="text-2xl font-bold">$48,250</h3>
+<p class="text-xs text-green-500 mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">north</span> +12.5% from last month
+                        </p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between mb-4">
+<span class="text-slate-500 dark:text-slate-400 text-sm font-medium">Active Bookings</span>
+<div class="size-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
+<span class="material-symbols-outlined text-lg">calendar_month</span>
+</div>
+</div>
+<h3 class="text-2xl font-bold">127</h3>
+<p class="text-xs text-blue-500 mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">north</span> +5.4% new requests
+                        </p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between mb-4">
+<span class="text-slate-500 dark:text-slate-400 text-sm font-medium">Fleet Utilization</span>
+<div class="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg">speed</span>
+</div>
+</div>
+<h3 class="text-2xl font-bold">84%</h3>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full mt-3">
+<div class="bg-primary h-full rounded-full w-[84%]"></div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between mb-4">
+<span class="text-slate-500 dark:text-slate-400 text-sm font-medium">New Customers</span>
+<div class="size-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-500">
+<span class="material-symbols-outlined text-lg">person_add</span>
+</div>
+</div>
+<h3 class="text-2xl font-bold">32</h3>
+<p class="text-xs text-purple-500 mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">north</span> +8.2% vs average
+                        </p>
+</div>
+</section>
+<!-- Charts Section -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Revenue Chart Mockup -->
+<div class="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between mb-6">
+<h4 class="font-bold">Revenue Performance</h4>
+<select class="bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-xs font-bold py-1 px-3">
+<option>Last 30 Days</option>
+<option>Last 6 Months</option>
+</select>
+</div>
+<div class="h-64 relative flex items-end justify-between gap-2 px-2">
+<div class="flex flex-col h-full w-full justify-end items-center group">
+<div class="bg-primary/20 w-full rounded-t-lg transition-all hover:bg-primary" style="height: 40%;"></div>
+<span class="text-[10px] mt-2 text-slate-500">Mon</span>
+</div>
+<div class="flex flex-col h-full w-full justify-end items-center group">
+<div class="bg-primary/20 w-full rounded-t-lg transition-all hover:bg-primary" style="height: 65%;"></div>
+<span class="text-[10px] mt-2 text-slate-500">Tue</span>
+</div>
+<div class="flex flex-col h-full w-full justify-end items-center group">
+<div class="bg-primary/20 w-full rounded-t-lg transition-all hover:bg-primary" style="height: 55%;"></div>
+<span class="text-[10px] mt-2 text-slate-500">Wed</span>
+</div>
+<div class="flex flex-col h-full w-full justify-end items-center group">
+<div class="bg-primary/20 w-full rounded-t-lg transition-all hover:bg-primary" style="height: 85%;"></div>
+<span class="text-[10px] mt-2 text-slate-500">Thu</span>
+</div>
+<div class="flex flex-col h-full w-full justify-end items-center group">
+<div class="bg-primary/20 w-full rounded-t-lg transition-all hover:bg-primary" style="height: 70%;"></div>
+<span class="text-[10px] mt-2 text-slate-500">Fri</span>
+</div>
+<div class="flex flex-col h-full w-full justify-end items-center group">
+<div class="bg-primary/20 w-full rounded-t-lg transition-all hover:bg-primary" style="height: 95%;"></div>
+<span class="text-[10px] mt-2 text-slate-500">Sat</span>
+</div>
+<div class="flex flex-col h-full w-full justify-end items-center group">
+<div class="bg-primary/20 w-full rounded-t-lg transition-all hover:bg-primary" style="height: 60%;"></div>
+<span class="text-[10px] mt-2 text-slate-500">Sun</span>
+</div>
+</div>
+</div>
+<!-- Fleet Status Donut Mockup -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col">
+<h4 class="font-bold mb-6">Fleet Status</h4>
+<div class="flex-1 flex flex-col items-center justify-center relative">
+<!-- SVG Donut -->
+<svg class="size-48 transform -rotate-90">
+<circle class="text-slate-100 dark:text-slate-800" cx="96" cy="96" fill="transparent" r="80" stroke="currentColor" stroke-width="24"></circle>
+<circle class="text-primary" cx="96" cy="96" fill="transparent" r="80" stroke="currentColor" stroke-dasharray="502" stroke-dashoffset="150" stroke-width="24"></circle>
+<circle class="text-slate-500" cx="96" cy="96" fill="transparent" r="80" stroke="currentColor" stroke-dasharray="502" stroke-dashoffset="400" stroke-width="24"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-bold">245</span>
+<span class="text-xs text-slate-500 uppercase tracking-widest">Total Cars</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2 mt-6">
+<div class="text-center">
+<div class="flex items-center justify-center gap-1.5 mb-1">
+<div class="size-2 rounded-full bg-primary"></div>
+<span class="text-xs font-medium text-slate-500">Booked</span>
+</div>
+<p class="font-bold">172</p>
+</div>
+<div class="text-center">
+<div class="flex items-center justify-center gap-1.5 mb-1">
+<div class="size-2 rounded-full bg-slate-100 dark:bg-slate-800"></div>
+<span class="text-xs font-medium text-slate-500">Available</span>
+</div>
+<p class="font-bold">61</p>
+</div>
+<div class="text-center">
+<div class="flex items-center justify-center gap-1.5 mb-1">
+<div class="size-2 rounded-full bg-slate-500"></div>
+<span class="text-xs font-medium text-slate-500">Service</span>
+</div>
+<p class="font-bold">12</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Latest Bookings Table -->
+<section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<h4 class="font-bold">Latest Bookings</h4>
+<button class="text-primary text-sm font-bold hover:underline">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">
+<th class="px-6 py-4">Booking #</th>
+<th class="px-6 py-4">Customer</th>
+<th class="px-6 py-4">Vehicle</th>
+<th class="px-6 py-4">Amount</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-bold text-sm">#AL-9281</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold overflow-hidden">
+<img alt="Customer" class="object-cover size-full" data-alt="Close-up of a smiling male customer profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTQkLpQft5v0F6itO8nWzYx2sSkPwdp_KreLvsycHAI4pHlG0YQFBukKcV3piTX85DhMndeZ08a4RZSsAA_yFtMFgExKvnjZgywYMbqZ-4LW3wSQcYaJXuotsnN2rTOAYKQB5y0jPUlkvc7cn_M-dLSyQ9j6Tu6zcgofZi6ApiN32VpgrQn39u1rvtMs6BbgbcHtcxC-RIGi9mA59jbm0d3WPZzlq85hlbJ7f1P4nCTkiHWOnV7wRagv1p4-f7B4BfparI7Y5EzozV"/>
+</div>
+<span class="text-sm font-medium">David Chen</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Mercedes-Benz S-Class</td>
+<td class="px-6 py-4 font-bold text-sm">$1,200</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-green-500/10 text-green-500 border border-green-500/20 uppercase">Completed</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-slate-400 hover:text-primary">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-bold text-sm">#AL-9282</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold overflow-hidden">
+<img alt="Customer" class="object-cover size-full" data-alt="Professional headshot of a female customer profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4KTsrX_ao8d5XOZYOdxeBQVdXhJDLagh2XZVgiZmXZD-oayPYlA2azUavI2nGp2ziUd-IeaVBDnLF6ZDzZucV7au4lSlDlgoB5rbEmlsQOPF1ou80czrMrAvHJbvnFN1rHvTGmsLT_enbIdHOBmZsL7YLYWJS1PpXaRAmHsuv_6ms3qBREN7QPPHttyYppPVnQFPMYgjiyg2bxe2cdTo15SUy9jbKSZoV-oVfEIdS0lHE8Ahk7DG4LWW__uYk_XI76zXv8IRAYj02"/>
+</div>
+<span class="text-sm font-medium">Sarah Jenkins</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Porsche 911 Carrera</td>
+<td class="px-6 py-4 font-bold text-sm">$2,450</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-primary/10 text-primary border border-primary/20 uppercase">Ongoing</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-slate-400 hover:text-primary">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-bold text-sm">#AL-9283</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold overflow-hidden text-background-dark">
+                                                MM
+                                            </div>
+<span class="text-sm font-medium">Marcus Miller</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">BMW M8 Competition</td>
+<td class="px-6 py-4 font-bold text-sm">$850</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-slate-500/10 text-slate-500 border border-slate-500/20 uppercase">Pending</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-slate-400 hover:text-primary">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 font-bold text-sm">#AL-9284</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold overflow-hidden">
+<img alt="Customer" class="object-cover size-full" data-alt="Portrait of a young male customer with glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5q-ABLefM9xKEtsiYakuQjtM8E5GAo1geg_gzf6F_nfwneFDhac2h7HZNW_E9axr-nbAdVmagOlK5kv84LUtvPWEBXJ6J6qzaPljZvKzDgyC7rHiGFs05v_cQzz57mDTjwbgvUhyXB-kLy0gi_8RfHYq4pfXLZVsnHdvVU4Mh3weVyK4jNlRQitPyJMKmD0PsHo8PxtOTrRDDFxDmKVbskDox_3dOzGAWGSqC6d6x5uPLuNsI0OxBcXedukdItg51ZhWMyUN9bjrR"/>
+</div>
+<span class="text-sm font-medium">Robert Fox</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Range Rover Autobiography</td>
+<td class="px-6 py-4 font-bold text-sm">$1,100</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-red-500/10 text-red-500 border border-red-500/20 uppercase">Cancelled</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-slate-400 hover:text-primary">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

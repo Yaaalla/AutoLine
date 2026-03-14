@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AutoLux | Bentley Continental GT</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#c9a96e",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#1e1a14",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-primary/10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex h-16 items-center justify-between">
+<a href="index.html" class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">diamond</span>
+<h1 class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white uppercase">AutoLux</h1>
+</a>
+<nav class="hidden md:flex items-center gap-8 text-sm font-semibold uppercase tracking-wider">
+<a class="hover:text-primary transition-colors" href="index.html">Home</a>
+<a class="text-primary border-b-2 border-primary pb-1" href="vehicles_gallery.html">Fleet</a>
+<a class="hover:text-primary transition-colors" href="booking_flow.html">Booking</a>
+<a class="hover:text-primary transition-colors" href="#">Contact</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<button class="p-2 rounded-full hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+<!-- Left Column: Gallery & Details -->
+<div class="lg:col-span-8 space-y-8">
+<!-- Gallery Section -->
+<div class="space-y-4">
+<div class="relative group aspect-video w-full overflow-hidden rounded-xl bg-slate-200 dark:bg-slate-800">
+<img alt="Bentley Continental GT front profile" class="h-full w-full object-cover" data-alt="Luxurious gold Bentley Continental GT parked in city" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIR0VBEFKluKzZD-BXb7MgEc7MeCaywmq1-0yO1sBxKKdjHrmYYQxkfw_Tk-d_UJsFPxxbElZiH-Ylm4I5-GflROZoH1GGuMXep0SOzeXJtLPdDk-hfNH34m_AsHMLYblAHCDk9gIab9wesjODtsI6onFP5V9VYZ39YbNFiKmv5ka8obwX3mv-VHDpVuSUtUK1i8bAbh6sF5ncaKYD1d2etYjBzAHVktrEO0AEozX2KokEcTxP1YUvBB57Ejw24v_lM2GMkSG4ZC3b"/>
+<button class="absolute bottom-4 right-4 flex items-center gap-2 bg-background-dark/80 text-white px-5 py-2.5 rounded-full backdrop-blur-sm border border-white/20 hover:bg-primary transition-all">
+<span class="material-symbols-outlined text-lg">360</span>
+<span class="text-sm font-bold uppercase tracking-widest">View 360</span>
+</button>
+</div>
+<div class="grid grid-cols-4 gap-4">
+<div class="aspect-square rounded-lg overflow-hidden border-2 border-primary">
+<img class="h-full w-full object-cover" data-alt="Close up of Bentley car interior wood grain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxFs4V2idyeM0K2KYntTJpMUZOBZF1KvK-Wt7It69HcqQyoQ4QP0tOmc2iTSUC-YxTRPZPG7R-gSxppvoNaIIro0glWgwszOsMvBwMr_s2jNOvARx3vhVvc2LTxQrnAY0GpfdFPd7yhhXrhia8NkSgfZExu4WFkK6eqqZo4lMVaSmAuFvtFxOM_-tulCy87KOwiQ2s93cHspuU1Qr7V4qrl8NUHmgypFA6EOYAEX3zwmJwxqmYvH7xuf1wZSmg7r_J-sXndYszPuge"/>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden border border-transparent hover:border-primary transition-all cursor-pointer">
+<img class="h-full w-full object-cover" data-alt="Rear view of Bentley Continental GT" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA40KkfLG59FU8GoKbhl91MLFf4v1XyH5OXDxnbQnb2jQHauutmlcm6hvgXTzce7MdNQoY5BH0wKeBr6z2giwY-PHJwRZzW4Bv_ZR_51ltK-RzlI_eAqjJqtUNSOGIYbWb8DRdICFX8GYnKwYP4SgGW3s19S1xGvr_UuKhTQ86fF8cC4FIUjW2jrLs7KM8StxxmIhc2xzRiGtyeCVOhtmFOtUB935bXK0JFTJKuHtOqsEk1fdETcZYJZuhk4XUZjKmVZn0GWz70RZ0K"/>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden border border-transparent hover:border-primary transition-all cursor-pointer">
+<img class="h-full w-full object-cover" data-alt="Bentley steering wheel detail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCeiexeYKGqHkjoZYqN8mlcPlDzCXuY3JcuRpzEkpmRrCxvr2Ha1mAmh7DIKexuaaNAMir8e6IBemWiRoB-DgVxzKRYpxhfV6k7_4XttXnjzEZC2_QN8z5b-fACweRwaUTngipZayWA9V-dRvUUVKjkxCCop87Tys15QhBotPUXXEIfwnWeI4IGgQduUhTQ_vmClmQqIA3C1v8oeQ2jKz77XkW41v9QKqYcOB0BKqwRBlQx7RJs2vggt2GBvavuvj-V3t4tkydL0Df"/>
+</div>
+<div class="relative aspect-square rounded-lg overflow-hidden border border-transparent hover:border-primary transition-all cursor-pointer">
+<img class="h-full w-full object-cover" data-alt="Bentley alloy wheel design detail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMqEwng8-IiFBe6fHsjZGmG6TVsfaT9texSvCGklWEUYcRMLIsWE-RWXFxGEdldyYjbMctE3kUx2I61wuqo4GNNNtGKcedNo_Zq_j0NGe8A3CIxQciRzR7zAg3mdnwo_PKL4dk51UxWiBXRlCWf8I_lkCG2r_fhsHpsxO-cDxyaMNV2-7xgHyxP_imNW7Y6NviQk1oyTQ9j29wsHAbu2DhJlOnC6Yk-l7PckvB99mCgrK-p7amb__Vo0fqhs8kF5SqfxKKPp7yH2U4"/>
+<div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+<span class="text-white font-bold text-lg">+12</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Info Header -->
+<div class="border-b border-primary/10 pb-6">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-primary/20 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Luxury Sport</span>
+<div class="flex items-center text-primary">
+<span class="material-symbols-outlined text-base fill-icon">star</span>
+<span class="material-symbols-outlined text-base fill-icon">star</span>
+<span class="material-symbols-outlined text-base fill-icon">star</span>
+<span class="material-symbols-outlined text-base fill-icon">star</span>
+<span class="material-symbols-outlined text-base fill-icon">star</span>
+<span class="ml-2 text-sm text-slate-500 font-medium">(48 Reviews)</span>
+</div>
+</div>
+<h2 class="text-4xl font-extrabold text-slate-900 dark:text-white">Bentley Continental GT V8</h2>
+</div>
+<div class="text-left md:text-right">
+<p class="text-primary text-3xl font-black">$400<span class="text-base font-medium text-slate-500">/day</span></p>
+<p class="text-xs text-slate-400 mt-1 uppercase tracking-tighter">Fully insured • No hidden fees</p>
+</div>
+</div>
+</div>
+<!-- Highlights -->
+<div class="grid grid-cols-3 gap-4">
+<div class="bg-slate-100 dark:bg-primary/5 p-4 rounded-xl border border-primary/10 flex items-center gap-4">
+<span class="material-symbols-outlined text-primary bg-primary/20 p-2 rounded-lg">calendar_month</span>
+<div>
+<p class="text-xs text-slate-500 uppercase font-bold">Model Year</p>
+<p class="font-bold">2024</p>
+</div>
+</div>
+<div class="bg-slate-100 dark:bg-primary/5 p-4 rounded-xl border border-primary/10 flex items-center gap-4">
+<span class="material-symbols-outlined text-primary bg-primary/20 p-2 rounded-lg">palette</span>
+<div>
+<p class="text-xs text-slate-500 uppercase font-bold">Color</p>
+<p class="font-bold">Champagne</p>
+</div>
+</div>
+<div class="bg-slate-100 dark:bg-primary/5 p-4 rounded-xl border border-primary/10 flex items-center gap-4">
+<span class="material-symbols-outlined text-primary bg-primary/20 p-2 rounded-lg">speed</span>
+<div>
+<p class="text-xs text-slate-500 uppercase font-bold">Mileage</p>
+<p class="font-bold">Unlimited</p>
+</div>
+</div>
+</div>
+<!-- Tabs Section -->
+<div class="w-full">
+<div class="flex border-b border-primary/10 mb-6">
+<button class="px-6 py-3 text-sm font-bold uppercase tracking-wider text-primary border-b-2 border-primary">Overview</button>
+<button class="px-6 py-3 text-sm font-bold uppercase tracking-wider text-slate-500 hover:text-primary transition-colors">Specs</button>
+<button class="px-6 py-3 text-sm font-bold uppercase tracking-wider text-slate-500 hover:text-primary transition-colors">Features</button>
+<button class="px-6 py-3 text-sm font-bold uppercase tracking-wider text-slate-500 hover:text-primary transition-colors">Reviews</button>
+</div>
+<div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-400 leading-relaxed">
+<p>The Bentley Continental GT V8 represents the pinnacle of grand touring. This 2024 model in exquisite Champagne finish offers a perfect blend of high-performance dynamics and handcrafted luxury. With its distinctive quad exhaust pipes and 21-inch wheels, this car makes a statement in any setting.</p>
+<p class="mt-4">Whether you're cruising through the city or embarking on a long-distance journey, the Continental GT provides an unmatched driving experience with its advanced air suspension and refined V8 engine delivering 542 horsepower.</p>
+</div>
+</div>
+</div>
+<!-- Right Column: Booking Widget -->
+<div class="lg:col-span-4">
+<div class="sticky top-24 bg-slate-50 dark:bg-[#2a241c] p-6 rounded-2xl border border-primary/20 shadow-xl">
+<h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">event_available</span>
+                        Reserve This Car
+                    </h3>
+<form class="space-y-4">
+<div class="space-y-1">
+<label class="text-xs font-bold uppercase text-slate-500 px-1">Pickup Date &amp; Time</label>
+<div class="relative">
+<input class="w-full bg-background-light dark:bg-background-dark border-primary/20 rounded-lg p-3 text-sm focus:ring-primary focus:border-primary" type="datetime-local" value="2024-10-24T10:00"/>
+</div>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-bold uppercase text-slate-500 px-1">Return Date &amp; Time</label>
+<div class="relative">
+<input class="w-full bg-background-light dark:bg-background-dark border-primary/20 rounded-lg p-3 text-sm focus:ring-primary focus:border-primary" type="datetime-local" value="2024-10-27T10:00"/>
+</div>
+</div>
+<div class="pt-4 border-t border-primary/10 space-y-3">
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Rental Price (3 Days)</span>
+<span class="font-bold">$1,200</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Insurance &amp; Tax</span>
+<span class="font-bold">$150</span>
+</div>
+<div class="flex justify-between text-lg pt-2 border-t border-primary/10">
+<span class="font-bold">Total</span>
+<span class="font-black text-primary">$1,350</span>
+</div>
+</div>
+<a href="booking_flow.html" class="w-full bg-primary hover:bg-primary/90 text-background-dark py-4 rounded-xl font-black uppercase tracking-widest transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 mt-4 text-center">
+                            Book This Car
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</form>
+<p class="text-center text-[10px] text-slate-500 mt-6 uppercase tracking-widest leading-relaxed">
+                        Free cancellation up to 24h before pickup.<br/>
+                        Security deposit: $1,000 (Refundable)
+                    </p>
+</div>
+</div>
+</div>
+<!-- Similar Cars Section -->
+<section class="mt-20">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-2xl font-extrabold uppercase tracking-tight">You Might Also Like</h3>
+<a class="text-primary text-sm font-bold flex items-center gap-1 hover:underline" href="vehicles_gallery.html">
+                    View Fleet
+                    <span class="material-symbols-outlined text-xs">open_in_new</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Car Card 1 -->
+<div class="group bg-slate-50 dark:bg-[#2a241c] rounded-xl overflow-hidden border border-primary/10 hover:border-primary/40 transition-all">
+<div class="aspect-[4/3] overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Porsche 911 Turbo S front view" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5frnGDoLoAPuMNIVQozzSwiPFm8R6S1xcGRgTuf1UKFKa1y7vp5sDYn931K6X5SUISuNEYx5OCuNsjpLlo3uE4Zk4pJ_V213H_jYo2nG_ugr92_CKZQUw-Sw3_DsRT1hTIJf8tZcR3M-vgQCGfrHQEpkDyIudj7jdepR_MtFfd9YG9XdaBLw6CDoGtiQVmw9bpTtiYKUu-cL842YJVnHR1Wu5ka8obwX3mv-VHDpVuSUtUK1i8bAbh6sF5ncaKYD1d2etYjBzAHVktrEO0AEozX2KokEcTxP1YUvBB57Ejw24v_lM2GMkSG4ZC3b"/>
+<div class="absolute top-3 right-3 bg-background-dark/80 backdrop-blur-md px-2 py-1 rounded text-xs font-bold text-primary">NEW</div>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-bold">Porsche 911 Turbo S</h4>
+<span class="text-primary font-bold text-sm">$350/d</span>
+</div>
+<div class="flex items-center gap-3 text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">local_gas_station</span> Gas</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">settings</span> Auto</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">person</span> 2</span>
+</div>
+</div>
+</div>
+<!-- Car Card 2 -->
+<div class="group bg-slate-50 dark:bg-[#2a241c] rounded-xl overflow-hidden border border-primary/10 hover:border-primary/40 transition-all">
+<div class="aspect-[4/3] overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Chevrolet Corvette Stingray side profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCRe2GZ0pRucv-zY-qgFRvrN9fEfOcKYiwlF8pjGfQJCyGFIAhqhl2pgoAg2JueeFmPEYh7gKIsHWKw713wSbmIu4PVBhO-YLrgi9Uzl2mzhn4V0FPxMb3V6eUHhiDyeTtBD4JZeyd7UIINb1yfuEDyEho_YWQA3xAKUzChrwNL7cC1GMpwgrT-qd4qJWW6ANHuAm9y8NSHR44IKtYShLjMvDdEST_yBPoAgwcsa3lwQw0W6JiL2a8G6CIYUvhwM9zKA6Inc1UY0TL"/>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-bold">Corvette Stingray</h4>
+<span class="text-primary font-bold text-sm">$320/d</span>
+</div>
+<div class="flex items-center gap-3 text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">local_gas_station</span> Gas</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">settings</span> Auto</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">person</span> 2</span>
+</div>
+</div>
+</div>
+<!-- Car Card 3 -->
+<div class="group bg-slate-50 dark:bg-[#2a241c] rounded-xl overflow-hidden border border-primary/10 hover:border-primary/40 transition-all">
+<div class="aspect-[4/3] overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Range Rover Autobiography in black" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHFP5kdY0K1m9kMgH_-BvVV0w_xrO7egIeynCQD6wPlN3KNJJwT7ONIZ7DwxZlouCBDGLtFY2Gy_RQiE_iqAOoU5saxOMJTCPNLVk38uxVvM2xQlwRtFzix2UMyUA4mzdAxsf5tGhdps9J_2bPsypgPjeMZZdMMUVQdQqYv0pBwZBlynPlbMRSWCh8n_IJKLizcCNvA-qLsRI2hMtuTcjfQsJVIB7gKMuzEXvZKIA2Gkm0gt0faTzvTKj_lCVajLHBFlqxgABOHN5M"/>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-bold">Range Rover Autobiography</h4>
+<span class="text-primary font-bold text-sm">$380/d</span>
+</div>
+<div class="flex items-center gap-3 text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">local_gas_station</span> Hybrid</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">settings</span> Auto</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">person</span> 5</span>
+</div>
+</div>
+</div>
+<!-- Car Card 4 -->
+<div class="group bg-slate-50 dark:bg-[#2a241c] rounded-xl overflow-hidden border border-primary/10 hover:border-primary/40 transition-all">
+<div class="aspect-[4/3] overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Aston Martin Vantage front profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcDJry00dbZhW59bBVEpo_ClKie7QLoeRGLG1c-5twckJvEsOl0fyajB7vDv3hY-LwxIlUY2QWS-HSDfHH8Jkmhxf1p_KxFyM_w4nmgUybHcB_GpMgGpA1Q7H4lLr-j5JT9THqspxiMEqX-zwdvoqa6PThlu6bIrDtHGZJTXpsBxvsjGDaqi7gGmFr32rwx0nMhuI-2Wh22NKw_VwNb1RxK1tAdldxDXVZoB0R7FLAnvc3oeYtAC5X8xyoyG0roJnn44znkdghOA5p"/>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-bold">Aston Martin Vantage</h4>
+<span class="text-primary font-bold text-sm">$450/d</span>
+</div>
+<div class="flex items-center gap-3 text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">local_gas_station</span> Gas</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">settings</span> Auto</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">person</span> 2</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="mt-20 bg-slate-100 dark:bg-[#16130f] border-t border-primary/10 py-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+<div class="space-y-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-2xl">diamond</span>
+<h2 class="text-lg font-extrabold tracking-tight uppercase">AutoLux</h2>
+</div>
+<p class="text-xs text-slate-500 leading-relaxed max-w-xs">The world's premier exotic car rental platform, providing unmatched luxury experiences in every major city since 2012.</p>
+</div>
+<div>
+<h5 class="text-sm font-black uppercase tracking-widest mb-4">Quick Links</h5>
+<ul class="space-y-2 text-sm text-slate-500">
+<li><a class="hover:text-primary transition-colors" href="#">Browse Fleet</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Special Offers</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Luxury Concierge</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-sm font-black uppercase tracking-widest mb-4">Support</h5>
+<ul class="space-y-2 text-sm text-slate-500">
+<li><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-sm font-black uppercase tracking-widest mb-4">Newsletter</h5>
+<div class="flex gap-2">
+<input class="bg-background-light dark:bg-background-dark border-primary/20 rounded-lg p-2 text-xs w-full" placeholder="Email" type="email"/>
+<button class="bg-primary text-background-dark p-2 rounded-lg">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</div>
+<div class="mt-12 pt-8 border-t border-primary/5 text-center">
+<p class="text-[10px] text-slate-500 uppercase tracking-widest">© 2024 AutoLux Exotic Rentals. All Rights Reserved.</p>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#c9a96e",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#12110f",
+                        "accent-dark": "#1A2420",
+                        "surface": "#1c1c1c",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "serif": ["Cormorant Garamond", "serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .hero-gradient {
+            background: linear-gradient(to bottom, rgba(18, 17, 15, 0.2) 0%, rgba(18, 17, 15, 0.9) 100%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<!-- Top Navigation -->
+<header class="fixed top-0 w-full z-50 border-b border-white/10 bg-background-dark/80 backdrop-blur-md px-6 lg:px-20 py-4 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="text-primary material-symbols-outlined text-3xl">storm</span>
+<h1 class="font-serif text-3xl font-bold tracking-tight text-slate-100">AutoLux</h1>
+</div>
+<nav class="hidden md:flex items-center gap-10">
+<a class="text-sm font-medium hover:text-primary transition-colors uppercase tracking-widest" href="index.html">Home</a>
+<a class="text-sm font-medium hover:text-primary transition-colors uppercase tracking-widest" href="vehicles_gallery.html">Vehicles</a>
+<a class="text-sm font-medium hover:text-primary transition-colors uppercase tracking-widest" href="#about">About</a>
+<a class="text-sm font-medium hover:text-primary transition-colors uppercase tracking-widest" href="#contact">Contact</a>
+</nav>
+<a href="booking_flow.html" class="bg-primary text-background-dark px-8 py-2.5 rounded-lg font-bold text-sm uppercase tracking-wider hover:bg-white transition-all shadow-lg text-center">
+            Book Now
+        </a>
+</header>
+<!-- Hero Section -->
+<section class="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 hero-gradient z-10"></div>
+<img alt="Rolls Royce Phantom front profile" class="w-full h-full object-cover" data-alt="Luxury black Rolls-Royce Phantom at dusk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7HcLpgfaE59uEG7K2C1TXDq16kT-TJrRGCaGVnoWbxxdpwjH8O2bE7ucJA71NQMcnulweRX_IsDkA7DB9qba0BVlxI6LOX54VzaeD8oR4meyR6CCoyWEtwiAoowGS5DjC_sSUbbeVb3LenV17qLY9EEyzq9-EUMO9gaU3gU4ejtjm9f5lRZSQkfqX2L8rQNeQRpL3wvzPCgFVb8vfEV618ANjj3ONf02d7c2RiaqpvT52rZbC-z_TH14KEOs4DJ82EU_f0W-26O6j"/>
+</div>
+<div class="relative z-20 text-center px-4 max-w-5xl">
+<div class="glass inline-block px-6 py-2 rounded-full mb-8">
+<span class="text-primary font-serif text-xl tracking-wide">$1,600 / day</span>
+</div>
+<h1 class="font-serif text-6xl md:text-8xl lg:text-[80px] leading-tight text-white mb-8">
+                Drive the <br/> <span class="italic text-primary">Extraordinary</span>
+</h1>
+<p class="text-slate-300 text-lg max-w-2xl mx-auto mb-10 font-light tracking-wide uppercase">
+                Curated collection of the world's most prestigious automobiles for the discerning traveler.
+            </p>
+</div>
+<!-- Booking Bar -->
+<div class="absolute bottom-10 left-1/2 -translate-x-1/2 w-full max-w-6xl px-4 z-30">
+<div class="bg-surface border border-white/5 rounded-xl p-3 shadow-2xl flex flex-wrap lg:flex-nowrap items-center gap-2">
+<div class="flex-1 min-w-[160px] p-3 border-r border-white/10 last:border-0 group">
+<label class="text-[10px] uppercase tracking-widest text-primary font-bold mb-1 block">Location</label>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-xl">location_on</span>
+<input class="bg-transparent border-0 p-0 text-sm focus:ring-0 text-white placeholder-slate-500 w-full" placeholder="Beverly Hills" type="text"/>
+</div>
+</div>
+<div class="flex-1 min-w-[160px] p-3 border-r border-white/10 last:border-0">
+<label class="text-[10px] uppercase tracking-widest text-primary font-bold mb-1 block">Pick Up Date</label>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-xl">calendar_today</span>
+<input class="bg-transparent border-0 p-0 text-sm focus:ring-0 text-white placeholder-slate-500 w-full" placeholder="Select Date" type="text"/>
+</div>
+</div>
+<div class="flex-1 min-w-[160px] p-3 border-r border-white/10 last:border-0">
+<label class="text-[10px] uppercase tracking-widest text-primary font-bold mb-1 block">Return Date</label>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-xl">event_available</span>
+<input class="bg-transparent border-0 p-0 text-sm focus:ring-0 text-white placeholder-slate-500 w-full" placeholder="Select Date" type="text"/>
+</div>
+</div>
+<div class="flex-1 min-w-[160px] p-3 border-r border-white/10 last:border-0">
+<label class="text-[10px] uppercase tracking-widest text-primary font-bold mb-1 block">Time</label>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-xl">schedule</span>
+<select class="bg-transparent border-0 p-0 text-sm focus:ring-0 text-white w-full">
+<option>10:00 AM</option>
+<option>12:00 PM</option>
+<option>02:00 PM</option>
+</select>
+</div>
+</div>
+<div class="flex-1 min-w-[160px] p-3 border-r border-white/10 last:border-0">
+<label class="text-[10px] uppercase tracking-widest text-primary font-bold mb-1 block">Category</label>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-xl">directions_car</span>
+<select class="bg-transparent border-0 p-0 text-sm focus:ring-0 text-white w-full">
+<option>Supercar</option>
+<option>Luxury Sedan</option>
+<option>Premium SUV</option>
+</select>
+</div>
+</div>
+<a href="vehicles_gallery.html" class="bg-primary hover:bg-white text-background-dark font-bold rounded-lg px-10 py-4 h-full transition-all text-center flex items-center justify-center">
+                    Search
+                </a>
+</div>
+</div>
+</section>
+<!-- Stats Section -->
+<section class="py-24 px-6 lg:px-20 bg-background-dark">
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+<div class="p-8 border border-white/5 rounded-2xl bg-white/5 flex flex-col items-center text-center">
+<span class="text-primary material-symbols-outlined text-4xl mb-4">garage</span>
+<p class="text-4xl font-serif text-white mb-2">150+</p>
+<p class="text-slate-400 text-xs uppercase tracking-[0.2em]">Luxury Fleet</p>
+</div>
+<div class="p-8 border border-white/5 rounded-2xl bg-white/5 flex flex-col items-center text-center">
+<span class="text-primary material-symbols-outlined text-4xl mb-4">stars</span>
+<p class="text-4xl font-serif text-white mb-2">4.9</p>
+<p class="text-slate-400 text-xs uppercase tracking-[0.2em]">Client Rating</p>
+</div>
+<div class="p-8 border border-white/5 rounded-2xl bg-white/5 flex flex-col items-center text-center">
+<span class="text-primary material-symbols-outlined text-4xl mb-4">group</span>
+<p class="text-4xl font-serif text-white mb-2">2k+</p>
+<p class="text-slate-400 text-xs uppercase tracking-[0.2em]">Global Clients</p>
+</div>
+<div class="p-8 border border-white/5 rounded-2xl bg-white/5 flex flex-col items-center text-center">
+<span class="text-primary material-symbols-outlined text-4xl mb-4">location_city</span>
+<p class="text-4xl font-serif text-white mb-2">15</p>
+<p class="text-slate-400 text-xs uppercase tracking-[0.2em]">Prime Cities</p>
+</div>
+</div>
+</section>
+<!-- Best Offer Section -->
+<section class="px-6 lg:px-20 py-20">
+<div class="max-w-7xl mx-auto bg-accent-dark rounded-3xl overflow-hidden flex flex-col lg:flex-row items-center">
+<div class="flex-1 p-12 lg:p-20">
+<span class="text-primary font-bold uppercase tracking-widest text-xs mb-4 block">Limited Time Offer</span>
+<h2 class="font-serif text-5xl text-white mb-6">Bentley Flying Spur</h2>
+<p class="text-slate-300 text-lg mb-10 font-light leading-relaxed">
+                    The pinnacle of luxury performance. Experience the fusion of exhilarating power and exquisite craftsmanship in the Flying Spur.
+                </p>
+<div class="flex items-center gap-10 mb-10">
+<div>
+<p class="text-white font-serif text-3xl">$1,450</p>
+<p class="text-slate-400 text-[10px] uppercase tracking-widest">Starting Price</p>
+</div>
+<div class="h-10 w-px bg-white/10"></div>
+<div>
+<p class="text-white font-serif text-3xl">626 HP</p>
+<p class="text-slate-400 text-[10px] uppercase tracking-widest">Max Power</p>
+</div>
+</div>
+<a href="booking_flow.html" class="bg-primary text-background-dark px-10 py-4 rounded-lg font-bold uppercase tracking-widest hover:bg-white transition-all shadow-xl text-center block">
+                    Quick Book
+                </a>
+</div>
+<div class="flex-1 h-full min-h-[400px] w-full relative">
+<img alt="Bentley Flying Spur Side Profile" class="w-full h-full object-cover" data-alt="Side view of a dark green Bentley Flying Spur in a luxury setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNMVt6XOaDedA5EZxbl5zsxmOWZWYoY2ChVNCxwM6frsFLVBX3KzlR5poN0w2nbJzhsvROb7mN0ZjzKfKy6xFODbzLlusJou7mCDFVvo9BnfIMk8MZMhBcKGJRnES4w0GZB0cAk-PuggLnQ_9MSdp2v_o2c9ISUfPlSULmq3rniYd3ssZ1OSKi3ZSe0Ool6tIeFHk54j9UjBhsQAUv9UhCFGl0PpCPEdBtNmTKvW-TqTsLG7iKiIuEgBWvHrVPMXUxxlMCCuE_4x2L"/>
+</div>
+</div>
+</section>
+<!-- Fleet Showcase -->
+<section class="py-24 px-6 lg:px-20 bg-background-dark">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+<div>
+<h2 class="font-serif text-5xl text-white mb-4">Our Elite Fleet</h2>
+<p class="text-slate-400 uppercase tracking-widest text-xs font-medium">Curated luxury for every journey</p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2 rounded-full border border-primary text-primary text-sm font-bold uppercase tracking-widest">All</button>
+<button class="px-6 py-2 rounded-full border border-white/10 text-slate-400 text-sm font-bold uppercase tracking-widest hover:text-white transition-colors">Supercars</button>
+<button class="px-6 py-2 rounded-full border border-white/10 text-slate-400 text-sm font-bold uppercase tracking-widest hover:text-white transition-colors">SUV</button>
+</div>
+</div>
+<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Car Card 1 -->
+<div class="group bg-surface rounded-2xl overflow-hidden border border-white/5 hover:border-primary/30 transition-all">
+<div class="h-48 relative overflow-hidden">
+<img alt="Lamborghini Urus" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Yellow Lamborghini Urus in city" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXdro0R7MfcgPJmF_Eh2iGp6GgJsDaSxD7xRaLX0Aou6sNnC7NMdVOgI6OJ6PHb5jukhojRoVdfnyheecYtrKgiWdqodDyPqnDVC8XDXCOzdMMlGci4QrFiyFawZ19uuHGsF3aXKNqsta4O5nsMaUzxjg9-gOdZL3SPUb9WZH6iv9xfjaVXcYEcKafbFNSluW3j0FlxBZEP1O_rXYbp_9PF0asLRU9qUb4G9LIAUrOYPK7gjz8fT325sBFt9L6clKVnxQTzuJhIzrK"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<h3 class="text-white font-serif text-xl">Lamborghini Urus</h3>
+<span class="text-primary font-serif text-lg">$1,200</span>
+</div>
+<div class="flex gap-4 mb-6">
+<div class="flex items-center gap-1 text-[10px] text-slate-400 uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm">airline_seat_recline_extra</span> 5 Seats
+                            </div>
+<div class="flex items-center gap-1 text-[10px] text-slate-400 uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm">settings</span> Auto
+                            </div>
+</div>
+<a href="car_details.html" class="block w-full border border-primary text-primary hover:bg-primary hover:text-background-dark py-3 rounded-lg text-xs font-bold uppercase tracking-widest transition-all text-center">
+                            Quick Book
+                        </a>
+</div>
+</div>
+<!-- Car Card 2 -->
+<div class="group bg-surface rounded-2xl overflow-hidden border border-white/5 hover:border-primary/30 transition-all">
+<div class="h-48 relative overflow-hidden">
+<img alt="Porsche 911" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Blue Porsche 911 on highway" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0l_sRZMoxb7F493pwLvY7LEpkz5ZLkYpJ0tYhkYlb-c5mXvMg0zW-RClU0KN7O07WWSXUjt2T5tn7ITqcOlArZHuYVLnxhn85qyVlxRkRpyI4ewzWY5Ds9tjWKsqE8nY_YjuHCaEDJGT6hH6bp0qppUTeU4igN5BaSiTRsAS3W5i1LicKqEytfvWNkjbsAlYfDfIOJw-nRXCNW5L9RndA175-vqMdRmi-BqNGNaOXbE_9qD6luz83Q02_frILKprAQF9svwabbh5R"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<h3 class="text-white font-serif text-xl">Porsche 911 GT3</h3>
+<span class="text-primary font-serif text-lg">$850</span>
+</div>
+<div class="flex gap-4 mb-6">
+<div class="flex items-center gap-1 text-[10px] text-slate-400 uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm">airline_seat_recline_extra</span> 2 Seats
+                            </div>
+<div class="flex items-center gap-1 text-[10px] text-slate-400 uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm">settings</span> Auto
+                            </div>
+</div>
+<button class="w-full border border-primary text-primary hover:bg-primary hover:text-background-dark py-3 rounded-lg text-xs font-bold uppercase tracking-widest transition-all">
+                            Quick Book
+                        </button>
+</div>
+</div>
+<!-- Car Card 3 -->
+<div class="group bg-surface rounded-2xl overflow-hidden border border-white/5 hover:border-primary/30 transition-all">
+<div class="h-48 relative overflow-hidden">
+<img alt="BMW M8" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Grey BMW M8 Competition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBP68avjsWcDAswRS9Y9s3d8Ho8IUkaWElhmJHuGdbHLVLRxa3Z8omTVR7N7MZPiUoTrFxD6fFxub1a94aK-obJWlsDfbf-uW1PVA-5QVQeTGpA-n6QXY3IJGV1MjiFNoqcboHu9x-eB-rgMHmOHMSxopQmMbkXca0dbU3pHsPYv-8DfxXfBX2nO4iS681GDfHjO2l3axKX0QFir5RYDqlLWnp1Udi3O_dBS5mZ5auJi5CQ3ZG1GkZtEvCu_vUZTr6pWRTn43ISj2qc"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<h3 class="text-white font-serif text-xl">BMW M8 Comp</h3>
+<span class="text-primary font-serif text-lg">$750</span>
+</div>
+<div class="flex gap-4 mb-6">
+<div class="flex items-center gap-1 text-[10px] text-slate-400 uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm">airline_seat_recline_extra</span> 4 Seats
+                            </div>
+<div class="flex items-center gap-1 text-[10px] text-slate-400 uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm">settings</span> Auto
+                            </div>
+</div>
+<button class="w-full border border-primary text-primary hover:bg-primary hover:text-background-dark py-3 rounded-lg text-xs font-bold uppercase tracking-widest transition-all">
+                            Quick Book
+                        </button>
+</div>
+</div>
+<!-- Car Card 4 -->
+<div class="group bg-surface rounded-2xl overflow-hidden border border-white/5 hover:border-primary/30 transition-all">
+<div class="h-48 relative overflow-hidden">
+<img alt="Range Rover Vogue" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="White Range Rover Autobiography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4X5xQhlkG8Kiy3aBbH6jtjU1deDjvtdE5QtnktwpHjTijY-ru5j6DsNYkdbuUUkzif9opjWK-xVDAsicbRzw-ZrVAGfBtnNqC4rRbQ8QXlOYBCTcNSUcu2oKPiCN9MyvVx_1pFUDaz6_8h0YhHaRJvuRr0ruQTErlNvKM0tRITBQ8QrazwbUK97Bzn3yysQWEavoQP0p-KikcbPm9R2UwAryEFqi6F6rCQx1FrZJjWsrBZL4Un2J9MOtv1vqD3Pk-KD8fy7rzBf1a"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<h3 class="text-white font-serif text-xl">Range Rover Autog</h3>
+<span class="text-primary font-serif text-lg">$600</span>
+</div>
+<div class="flex gap-4 mb-6">
+<div class="flex items-center gap-1 text-[10px] text-slate-400 uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm">airline_seat_recline_extra</span> 5 Seats
+                            </div>
+<div class="flex items-center gap-1 text-[10px] text-slate-400 uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm">settings</span> Auto
+                            </div>
+</div>
+<button class="w-full border border-primary text-primary hover:bg-primary hover:text-background-dark py-3 rounded-lg text-xs font-bold uppercase tracking-widest transition-all">
+                            Quick Book
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- How It Works -->
+<section class="py-24 px-6 lg:px-20">
+<div class="max-w-7xl mx-auto text-center mb-16">
+<h2 class="font-serif text-5xl text-white mb-4">Simplicity in Motion</h2>
+<p class="text-slate-400 uppercase tracking-widest text-xs font-medium">Three steps to your dream experience</p>
+</div>
+<div class="grid md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+<div class="text-center group">
+<div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-primary group-hover:text-background-dark transition-all duration-300">
+<span class="material-symbols-outlined text-3xl">search_check</span>
+</div>
+<h4 class="text-white text-xl font-serif mb-4">Choose Your Car</h4>
+<p class="text-slate-400 text-sm leading-relaxed">Browse our exclusive collection and find the perfect match for your style and performance needs.</p>
+</div>
+<div class="text-center group">
+<div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-primary group-hover:text-background-dark transition-all duration-300">
+<span class="material-symbols-outlined text-3xl">calendar_month</span>
+</div>
+<h4 class="text-white text-xl font-serif mb-4">Pick Date &amp; Time</h4>
+<p class="text-slate-400 text-sm leading-relaxed">Select your preferred dates and location. We offer flexible scheduling and concierge delivery.</p>
+</div>
+<div class="text-center group">
+<div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:bg-primary group-hover:text-background-dark transition-all duration-300">
+<span class="material-symbols-outlined text-3xl">key</span>
+</div>
+<h4 class="text-white text-xl font-serif mb-4">Drive &amp; Enjoy</h4>
+<p class="text-slate-400 text-sm leading-relaxed">Receive your keys and embark on an unforgettable journey. We handle the details, you enjoy the drive.</p>
+</div>
+</div>
+</section>
+<!-- Testimonials -->
+<section class="py-24 px-6 lg:px-20 bg-surface">
+<div class="max-w-7xl mx-auto">
+<div class="flex items-center gap-4 mb-12">
+<div class="h-px w-20 bg-primary"></div>
+<span class="text-primary uppercase tracking-widest text-xs font-bold">Client Experiences</span>
+</div>
+<div class="grid md:grid-cols-3 gap-10">
+<div class="p-10 border border-white/5 bg-background-dark/50 rounded-2xl">
+<div class="flex text-primary mb-6">
+<span class="material-symbols-outlined">star</span>
+<span class="material-symbols-outlined">star</span>
+<span class="material-symbols-outlined">star</span>
+<span class="material-symbols-outlined">star</span>
+<span class="material-symbols-outlined">star</span>
+</div>
+<p class="text-slate-300 italic mb-8 font-light leading-relaxed">"The Bentley was in pristine condition. The delivery service to my hotel was seamless. Truly a 5-star experience."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-slate-800" data-alt="Avatar portrait placeholder"></div>
+<div>
+<p class="text-white text-sm font-bold">Julian Vercetti</p>
+<p class="text-slate-500 text-[10px] uppercase tracking-widest">Business Executive</p>
+</div>
+</div>
+</div>
+<div class="p-10 border border-white/5 bg-background-dark/50 rounded-2xl">
+<div class="flex text-primary mb-6">
+<span class="material-symbols-outlined">star</span>
+<span class="material-symbols-outlined">star</span>
+<span class="material-symbols-outlined">star</span>
+<span class="material-symbols-outlined">star</span>
+<span class="material-symbols-outlined">star</span>
+</div>
+<p class="text-slate-300 italic mb-8 font-light leading-relaxed">"AutoLux provides more than just cars; they provide memories. Driving the 911 through the canyon was breathtaking."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-slate-800" data-alt="Avatar portrait placeholder"></div>
+<div>
+<p class="text-white text-sm font-bold">Sophia Chen</p>
+<p class="text-slate-500 text-[10px] uppercase tracking-widest">Lifestyle Journalist</p>
+</div>
+</div>
+</div>
+<div class="p-10 border border-white/5 bg-background-dark/50 rounded-2xl">
+<div class="flex text-primary mb-6">
+<span class="material-symbols-outlined">star</span>
+<span class="material-symbols-outlined">star</span>
+<span class="material-symbols-outlined">star</span>
+<span class="material-symbols-outlined">star</span>
+<span class="material-symbols-outlined">star</span>
+</div>
+<p class="text-slate-300 italic mb-8 font-light leading-relaxed">"Professional staff and a fleet that actually looks like the photos. Highly recommend for any high-profile event."</p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-slate-800" data-alt="Avatar portrait placeholder"></div>
+<div>
+<p class="text-white text-sm font-bold">Marcus Thorne</p>
+<p class="text-slate-500 text-[10px] uppercase tracking-widest">Event Director</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Newsletter -->
+<section class="py-24 px-6 lg:px-20 text-center relative overflow-hidden">
+<div class="absolute inset-0 z-0 opacity-20">
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark to-transparent"></div>
+<img alt="Dark luxury car abstract" class="w-full h-full object-cover" data-alt="Close up detail of a dark luxury car headlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZBcc5lB6JilflO6U6M4NT9hRXCKj7MYQFyHtFuzA_RlDFszcYv0tWt2ev0ZXqs67xI2gtqDSwV5eKHMZuZDjg4ATnHX4W5B2GpjNBp1ur2zirSy4EX5hbP6uLPYSb_mpPlezox2Jad8equdMX2QynjlykmnDIxhp9dEN2yoo27p891sINaoJ4uUy8zYbdfkCvZ8yjxVgFTkxPBVALeGmaupIL2E5DlmaPhpS38gdZhEF36A6MQROrte-sYoMx01gIDSQHwHg358H0"/>
+</div>
+<div class="relative z-10 max-w-3xl mx-auto">
+<h2 class="font-serif text-5xl text-white mb-6">The Inner Circle</h2>
+<p class="text-slate-400 text-lg mb-10 font-light">Join our mailing list for exclusive access to new arrivals, bespoke travel guides, and member-only rates.</p>
+<form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+<input class="bg-surface border border-white/10 rounded-lg px-6 py-4 flex-1 text-white focus:ring-primary focus:border-primary" placeholder="Your email address" type="email"/>
+<button class="bg-primary text-background-dark font-bold px-10 py-4 rounded-lg uppercase tracking-widest hover:bg-white transition-all">Subscribe</button>
+</form>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-background-dark border-t border-white/5 pt-20 pb-10 px-6 lg:px-20">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+<div class="col-span-1 lg:col-span-1">
+<div class="flex items-center gap-2 mb-8">
+<span class="text-primary material-symbols-outlined text-3xl">storm</span>
+<h1 class="font-serif text-3xl font-bold text-white">AutoLux</h1>
+</div>
+<p class="text-slate-500 text-sm leading-relaxed mb-8">
+                    Defining luxury mobility through unparalleled selection and personalized service since 2012.
+                </p>
+<div class="flex gap-4">
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">camera</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">video_library</span></a>
+</div>
+</div>
+<div>
+<h5 class="text-white font-bold uppercase tracking-widest text-xs mb-8">Explore</h5>
+<ul class="space-y-4 text-slate-500 text-sm">
+<li><a class="hover:text-primary transition-colors" href="vehicles_gallery.html">Our Fleet</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Memberships</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Destinations</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Gift Cards</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-white font-bold uppercase tracking-widest text-xs mb-8">Support</h5>
+<ul class="space-y-4 text-slate-500 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">FAQ</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Driver Rules</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact Support</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-white font-bold uppercase tracking-widest text-xs mb-8">Contact Us</h5>
+<ul class="space-y-4 text-slate-500 text-sm">
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-lg">call</span>
+                        +1 (800) LUX-AUTO
+                    </li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-lg">mail</span>
+                        concierge@autolux.com
+                    </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-lg">location_on</span>
+                        90210 Wilshire Blvd, <br/> Beverly Hills, CA
+                    </li>
+</ul>
+</div>
+</div>
+<div class="max-w-7xl mx-auto border-t border-white/5 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
+<p class="text-slate-600 text-[10px] uppercase tracking-[0.3em]">© 2024 AutoLux Luxury Car Rental. All rights reserved.</p>
+<div class="flex gap-8">
+<a class="text-slate-600 text-[10px] uppercase tracking-[0.2em] hover:text-white" href="#">Terms</a>
+<a class="text-slate-600 text-[10px] uppercase tracking-[0.2em] hover:text-white" href="#">Privacy</a>
+<a class="text-slate-600 text-[10px] uppercase tracking-[0.2em] hover:text-white" href="#">Cookies</a>
+</div>
+</div>
+</footer>
+</body></html>

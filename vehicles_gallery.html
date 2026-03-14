@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#c9a96e",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#1e1a14",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #c9a96e;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex min-h-screen flex-col">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-50 w-full border-b border-primary/10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="container mx-auto flex h-20 items-center justify-between px-6">
+<div class="flex items-center gap-12">
+<div class="flex items-center gap-3">
+<div class="text-primary">
+<span class="material-symbols-outlined text-4xl">directions_car</span>
+</div>
+<h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">AutoLux</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="index.html">Home</a>
+<a class="text-sm font-semibold text-primary" href="vehicles_gallery.html">Fleet</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="booking_flow.html">Booking</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Contact</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center bg-primary/5 dark:bg-primary/10 rounded-full px-4 py-2 border border-primary/20">
+<span class="material-symbols-outlined text-primary text-xl">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm placeholder:text-slate-500 w-48" placeholder="Search fleet..." type="text"/>
+</div>
+<button class="relative rounded-full p-2 hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="absolute top-1 right-1 h-2 w-2 rounded-full bg-primary"></span>
+</button>
+<div class="h-10 w-10 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center overflow-hidden">
+<img alt="Profile" class="h-full w-full object-cover" data-alt="User profile avatar placeholder" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuNVGtLz3_13IQJ2FZ2PCRrdtsldsm7INt2XZzz0-vNBsaS8_oax16oVDQgScA0r0vVvuOUtIrwcGMhc7krx1BlLDzNe_wJcC7fI8GvtXj-Q2uxAnII6hdMeQOt5WF6fDeEnoqiKo22L7yVxQxHvRoaTmVVs5f3VBiUVZEF-l-Hd6Nle-hege8RIVoFq_ThuszzUG3Zm4L56uriO7cy_vnmI66YBm5Y4TV5MBiFnYtBeVa_AENsnrudlUTaUnoqJCM_h79WEkHWFtQ"/>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<!-- Hero Header -->
+<div class="relative h-48 w-full bg-slate-900 overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-r from-background-dark to-transparent z-10"></div>
+<div class="absolute inset-0 opacity-40 grayscale" data-alt="Luxury car headlights blurred in dark background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAitu1DGpWgKagZtDAlowsja8DObqFfvaRV63-KXaIvl748yiUMrH4cja7tdrvodEOpBSX2hxxdlP3uj5utsqvUo4E2xlSRk8BIGrY8mJ4Gv6aBWyJhhO52j5w2cv5vYUkiIU_9wPuOwv_mbxQvFjw7h8IZdyQnHjYb-caci7F5fi5mjVYlu6BSIr5vU103ePZd-u-awFiQzNWycM9pX324xGMSIUeaZTCyJgZOspjaxyNazxEQSJQ90oqr5AEAg5qhdEdQlewn-0AO'); background-size: cover; background-position: center;"></div>
+<div class="container mx-auto relative z-20 h-full flex flex-col justify-center px-6">
+<h2 class="text-4xl font-extrabold text-white">Our Fleet</h2>
+<p class="text-primary font-medium mt-2">Discover our collection of premium vehicles</p>
+</div>
+</div>
+<div class="container mx-auto px-6 py-8">
+<div class="flex flex-col lg:flex-row gap-8">
+<!-- Left Sidebar Filters -->
+<aside class="w-full lg:w-72 shrink-0 space-y-8">
+<div class="rounded-xl border border-primary/10 bg-primary/5 p-6 space-y-8">
+<div>
+<h3 class="text-sm font-bold uppercase tracking-wider text-primary mb-4">Brand</h3>
+<div class="space-y-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="h-5 w-5 rounded border-primary/30 text-primary focus:ring-primary/20 bg-transparent" type="checkbox"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Rolls-Royce</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="h-5 w-5 rounded border-primary/30 text-primary focus:ring-primary/20 bg-transparent" type="checkbox"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Bentley</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="h-5 w-5 rounded border-primary/30 text-primary focus:ring-primary/20 bg-transparent" type="checkbox"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Lamborghini</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="h-5 w-5 rounded border-primary/30 text-primary focus:ring-primary/20 bg-transparent" type="checkbox"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Ferrari</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="h-5 w-5 rounded border-primary/30 text-primary focus:ring-primary/20 bg-transparent" type="checkbox"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Aston Martin</span>
+</label>
+</div>
+</div>
+<hr class="border-primary/10"/>
+<div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-sm font-bold uppercase tracking-wider text-primary">Price Range</h3>
+<span class="text-xs font-mono">$100 - $2000</span>
+</div>
+<input class="w-full h-1.5 bg-primary/20 rounded-lg appearance-none cursor-pointer" max="2000" min="100" type="range" value="800"/>
+<div class="flex justify-between mt-2 text-[10px] text-slate-500 font-bold">
+<span>MIN</span>
+<span>MAX</span>
+</div>
+</div>
+<hr class="border-primary/10"/>
+<div>
+<h3 class="text-sm font-bold uppercase tracking-wider text-primary mb-4">Seats</h3>
+<div class="grid grid-cols-3 gap-2">
+<button class="py-2 text-xs font-bold border border-primary/20 rounded hover:bg-primary/10 transition-colors">2</button>
+<button class="py-2 text-xs font-bold border border-primary/40 bg-primary/20 text-primary rounded">4</button>
+<button class="py-2 text-xs font-bold border border-primary/20 rounded hover:bg-primary/10 transition-colors">5+</button>
+</div>
+</div>
+<hr class="border-primary/10"/>
+<div>
+<h3 class="text-sm font-bold uppercase tracking-wider text-primary mb-4">Transmission</h3>
+<div class="space-y-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="h-5 w-5 border-primary/30 text-primary focus:ring-primary/20 bg-transparent" name="transmission" type="radio"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Automatic</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="h-5 w-5 border-primary/30 text-primary focus:ring-primary/20 bg-transparent" name="transmission" type="radio"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Manual</span>
+</label>
+</div>
+</div>
+</div>
+</aside>
+<!-- Right Grid Section -->
+<div class="flex-1 space-y-6">
+<!-- Toolbar -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-primary/5 dark:bg-primary/5 border border-primary/10 p-4 rounded-xl">
+<span class="text-sm font-medium text-slate-500">Showing <span class="text-slate-900 dark:text-slate-100 font-bold">24</span> luxury vehicles</span>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold uppercase text-slate-500">Sort:</span>
+<select class="bg-transparent border-none text-sm font-semibold focus:ring-0 cursor-pointer pr-8 py-1">
+<option>Recommended</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+<option>Newest First</option>
+</select>
+</div>
+<div class="flex items-center gap-1 border-l border-primary/10 pl-4">
+<button class="p-1.5 text-primary bg-primary/10 rounded">
+<span class="material-symbols-outlined text-xl">grid_view</span>
+</button>
+<button class="p-1.5 text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl">view_list</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Car Card 1 -->
+<div class="group relative flex flex-col overflow-hidden rounded-xl border border-primary/10 bg-background-light dark:bg-background-dark/40 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300">
+<div class="relative h-56 overflow-hidden">
+<img class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Sleek black Rolls Royce Phantom in a luxury garage" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_e5OwHlZLhveh9r00JnVnFw3kvM2-GSpy2RARRs9PM4fj7iWkD6i2xTgjwKNOWuUqJULIqs8WjGnnrtyGpWlcjNinJhCGCJ_F3-BNYoCsGC0nbmiqdVwa-QA2QyBcnSDk0hkERTmRdEmiiql1kt6_-DHsz22t_beMBQvNBGwDIWdcdEJsbnTHeuDip7sHVb0A16Bv6ThA15kFPYstpBK03hSPiD_XM9IhHHdWUszKRpMOyXp8YoRjV2LkX285vIlV2zKPxyJWIj05"/>
+<div class="absolute top-4 left-4 z-20">
+<span class="bg-emerald-500/90 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded shadow-lg">Available</span>
+</div>
+<button class="absolute top-4 right-4 z-20 h-10 w-10 flex items-center justify-center bg-background-dark/40 backdrop-blur-md rounded-full text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex flex-1 flex-col p-6">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-xs font-bold text-primary uppercase tracking-widest">Rolls-Royce</p>
+<h3 class="text-xl font-bold">Phantom VIII</h3>
+</div>
+<div class="text-right">
+<p class="text-lg font-black text-primary">$1,200</p>
+<p class="text-[10px] font-bold text-slate-500">PER DAY</p>
+</div>
+</div>
+<div class="my-4 grid grid-cols-3 gap-4 border-y border-primary/5 py-4">
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-primary/60 text-lg">settings</span>
+<span class="text-[10px] font-bold uppercase text-slate-500">6.7L V12</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-primary/60 text-lg">local_gas_station</span>
+<span class="text-[10px] font-bold uppercase text-slate-500">Gasoline</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-primary/60 text-lg">airline_seat_recline_extra</span>
+<span class="text-[10px] font-bold uppercase text-slate-500">4 Seats</span>
+</div>
+</div>
+<a href="car_details.html" class="mt-auto w-full rounded-lg bg-primary py-3.5 text-sm font-black uppercase tracking-widest text-background-dark transition-all hover:bg-primary/90 active:scale-95 text-center block">
+                                        Book Now
+                                    </a>
+</div>
+</div>
+<!-- Car Card 2 -->
+<div class="group relative flex flex-col overflow-hidden rounded-xl border border-primary/10 bg-background-light dark:bg-background-dark/40 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300">
+<div class="relative h-56 overflow-hidden">
+<img class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Bright yellow Lamborghini Huracan parked on a modern driveway" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5vmeleIA_GGGgTfxeVNiuuOvWQlGbrHsDbPeDgVXIUgdP1zalDqZU69Xg2J7f6rUmm20CgD4cBv8R5zMJYxDU3Y5ckVd26Xh2WRRUpqlmgAAQzWuhCn-GDkkyJ3q7U9vF9te4rQvgKTj5AUJ6LTzHiWepqVyk5H5OyqaF3ePU_-VbrKkJbT1eLUw2-Dfa2LWu3i1YgGr11wBVBJYlO50AXJqJKhXA_byZqBtixa0HSjHMeF1qCFjEzUX5A_Ic166hJ1JH9zeI1c5d"/>
+<div class="absolute top-4 left-4 z-20">
+<span class="bg-amber-500/90 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded shadow-lg">Low Stock</span>
+</div>
+<button class="absolute top-4 right-4 z-20 h-10 w-10 flex items-center justify-center bg-background-dark/40 backdrop-blur-md rounded-full text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex flex-1 flex-col p-6">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-xs font-bold text-primary uppercase tracking-widest">Lamborghini</p>
+<h3 class="text-xl font-bold">Huracán EVO</h3>
+</div>
+<div class="text-right">
+<p class="text-lg font-black text-primary">$850</p>
+<p class="text-[10px] font-bold text-slate-500">PER DAY</p>
+</div>
+</div>
+<div class="my-4 grid grid-cols-3 gap-4 border-y border-primary/5 py-4">
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-primary/60 text-lg">settings</span>
+<span class="text-[10px] font-bold uppercase text-slate-500">5.2L V10</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-primary/60 text-lg">local_gas_station</span>
+<span class="text-[10px] font-bold uppercase text-slate-500">Gasoline</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-primary/60 text-lg">airline_seat_recline_extra</span>
+<span class="text-[10px] font-bold uppercase text-slate-500">2 Seats</span>
+</div>
+</div>
+<button class="mt-auto w-full rounded-lg bg-primary py-3.5 text-sm font-black uppercase tracking-widest text-background-dark transition-all hover:bg-primary/90 active:scale-95">
+                                        Book Now
+                                    </button>
+</div>
+</div>
+<!-- Car Card 3 -->
+<div class="group relative flex flex-col overflow-hidden rounded-xl border border-primary/10 bg-background-light dark:bg-background-dark/40 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300">
+<div class="relative h-56 overflow-hidden">
+<img class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Classic silver Bentley Continental GT on a scenic mountain road" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6wGIVRzdJaw-DYb0NjVv9fs7IWlfx5CmMMZTW0daUWZ7IlrDL2Y30x9PcBSjtlzaoXDaPe8n276RXCDdDwg8JqYtyUr8XNhu7DwVFnTlhZkpbzON4cADMXV9CrU_qnT5C_vQ85wDFS5gFA-Vk9Da54tCnY9-lLhR1GC_UW4RS8Cd7FAUbCNpZOaIxJUc8OujePB3Ksus3VE9R3bTHLwgDIVt8lnbLo4EJ34AjjG9Kn2ZeR7lLxmvTvWLlxZmo7941O4Rlo_045Pzm"/>
+<div class="absolute top-4 left-4 z-20">
+<span class="bg-emerald-500/90 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded shadow-lg">Available</span>
+</div>
+<button class="absolute top-4 right-4 z-20 h-10 w-10 flex items-center justify-center bg-background-dark/40 backdrop-blur-md rounded-full text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex flex-1 flex-col p-6">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-xs font-bold text-primary uppercase tracking-widest">Bentley</p>
+<h3 class="text-xl font-bold">Continental GT</h3>
+</div>
+<div class="text-right">
+<p class="text-lg font-black text-primary">$950</p>
+<p class="text-[10px] font-bold text-slate-500">PER DAY</p>
+</div>
+</div>
+<div class="my-4 grid grid-cols-3 gap-4 border-y border-primary/5 py-4">
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-primary/60 text-lg">settings</span>
+<span class="text-[10px] font-bold uppercase text-slate-500">6.0L W12</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-primary/60 text-lg">local_gas_station</span>
+<span class="text-[10px] font-bold uppercase text-slate-500">Hybrid</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-primary/60 text-lg">airline_seat_recline_extra</span>
+<span class="text-[10px] font-bold uppercase text-slate-500">4 Seats</span>
+</div>
+</div>
+<button class="mt-auto w-full rounded-lg bg-primary py-3.5 text-sm font-black uppercase tracking-widest text-background-dark transition-all hover:bg-primary/90 active:scale-95">
+                                        Book Now
+                                    </button>
+</div>
+</div>
+<!-- Car Card 4 -->
+<div class="group relative flex flex-col overflow-hidden rounded-xl border border-primary/10 bg-background-light dark:bg-background-dark/40 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300">
+<div class="relative h-56 overflow-hidden">
+<img class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Red Ferrari Roma parked in front of a modern architectural building" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvo8KbOOg5t6heMZjU3STbgV0Ql0-9wAn_NjrrHGkINBXUBdIlFyZqA76kBQ4g1UBTl1_wQL-opwgpnZmJFIsFr86E0lsmLYMayKvY0B-dz-7-qvFuha3zvhGbAIF-GI6V-TCgq70-3j7MvD0Mgut3ZQt9LX2ScegbQvHJPXoN85Hx7DZ_QEeqxYHZ_Zl0jeg2DDkoVjme23T7_cruZZScstTFOJopS6-Cfg6yExGSaiCGPGtAP7YAFuXQakLOtg3ps2r79Wb_Flu1"/>
+<div class="absolute top-4 left-4 z-20">
+<span class="bg-rose-500/90 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded shadow-lg">Reserved</span>
+</div>
+<button class="absolute top-4 right-4 z-20 h-10 w-10 flex items-center justify-center bg-background-dark/40 backdrop-blur-md rounded-full text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex flex-1 flex-col p-6">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-xs font-bold text-primary uppercase tracking-widest">Ferrari</p>
+<h3 class="text-xl font-bold">Roma Spider</h3>
+</div>
+<div class="text-right">
+<p class="text-lg font-black text-primary">$780</p>
+<p class="text-[10px] font-bold text-slate-500">PER DAY</p>
+</div>
+</div>
+<div class="my-4 grid grid-cols-3 gap-4 border-y border-primary/5 py-4">
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-primary/60 text-lg">settings</span>
+<span class="text-[10px] font-bold uppercase text-slate-500">3.9L V8</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-primary/60 text-lg">local_gas_station</span>
+<span class="text-[10px] font-bold uppercase text-slate-500">Gasoline</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-primary/60 text-lg">airline_seat_recline_extra</span>
+<span class="text-[10px] font-bold uppercase text-slate-500">2 Seats</span>
+</div>
+</div>
+<button class="mt-auto w-full rounded-lg bg-primary py-3.5 text-sm font-black uppercase tracking-widest text-background-dark transition-all hover:bg-primary/90 active:scale-95 opacity-50 cursor-not-allowed">
+                                        Waitlist
+                                    </button>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="flex justify-center pt-8">
+<nav class="flex items-center gap-2">
+<button class="h-10 w-10 flex items-center justify-center rounded-lg border border-primary/10 hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="h-10 w-10 flex items-center justify-center rounded-lg bg-primary text-background-dark font-black">1</button>
+<button class="h-10 w-10 flex items-center justify-center rounded-lg border border-primary/10 hover:bg-primary/10 transition-colors font-bold">2</button>
+<button class="h-10 w-10 flex items-center justify-center rounded-lg border border-primary/10 hover:bg-primary/10 transition-colors font-bold">3</button>
+<span class="px-2 text-slate-500">...</span>
+<button class="h-10 w-10 flex items-center justify-center rounded-lg border border-primary/10 hover:bg-primary/10 transition-colors font-bold">12</button>
+<button class="h-10 w-10 flex items-center justify-center rounded-lg border border-primary/10 hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</nav>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="border-t border-primary/10 bg-primary/5 py-12">
+<div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1 space-y-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-3xl">directions_car</span>
+<h2 class="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">AutoLux</h2>
+</div>
+<p class="text-sm text-slate-500 leading-relaxed">
+                        Experience the pinnacle of luxury mobility. We provide an exclusive fleet of the world's most prestigious vehicles.
+                    </p>
+</div>
+<div>
+<h4 class="text-sm font-bold uppercase tracking-widest mb-6">Explore</h4>
+<ul class="space-y-4 text-sm text-slate-500">
+<li><a class="hover:text-primary transition-colors" href="vehicles_gallery.html">Our Fleet</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Pricing</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Destinations</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Membership</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-sm font-bold uppercase tracking-widest mb-6">Support</h4>
+<ul class="space-y-4 text-sm text-slate-500">
+<li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Booking Guide</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-sm font-bold uppercase tracking-widest mb-6">Newsletter</h4>
+<p class="text-sm text-slate-500 mb-4">Subscribe for exclusive offers and updates.</p>
+<div class="flex gap-2">
+<input class="flex-1 bg-background-dark/20 border-primary/20 rounded-lg text-sm focus:ring-primary focus:border-primary" placeholder="Email address" type="email"/>
+<button class="bg-primary px-4 py-2 rounded-lg text-background-dark">
+<span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<div class="container mx-auto px-6 mt-12 pt-8 border-t border-primary/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold text-slate-500 uppercase tracking-widest">
+<p>© 2024 AutoLux Luxury Car Rental. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="hover:text-primary transition-colors" href="#">Instagram</a>
+<a class="hover:text-primary transition-colors" href="#">LinkedIn</a>
+<a class="hover:text-primary transition-colors" href="#">X (Twitter)</a>
+</div>
+</div>
+</footer>
+</div>
+</body></html>
