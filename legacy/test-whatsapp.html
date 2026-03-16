@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار ميزة الحجز عبر WhatsApp - AutoLine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #888;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .test-section h2 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .test-section p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+            direction: ltr;
+            text-align: left;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+        
+        .icon {
+            font-size: 20px;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .button.secondary {
+            background: #6c757d;
+        }
+        
+        .button.secondary:hover {
+            background: #5a6268;
+        }
+        
+        .checklist {
+            list-style: none;
+        }
+        
+        .checklist li {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checklist li:before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .table th {
+            background: #667eea;
+            color: white;
+        }
+        
+        .footer {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 اختبار ميزة الحجز عبر WhatsApp</h1>
+        <p class="subtitle">AutoLine - نظام إدارة حجوزات السيارات</p>
+        
+        <!-- Status Check -->
+        <div class="test-section">
+            <h2>✅ حالة النظام</h2>
+            <div class="status success">
+                <span class="icon">✓</span>
+                <span><strong>البنية الأساسية:</strong> تم تثبيت الملفات بنجاح</span>
+            </div>
+            <div class="status info">
+                <span class="icon">ℹ</span>
+                <span><strong>التكوين:</strong> يجب تعديل رقم WhatsApp في `config/whatsapp_config.php`</span>
+            </div>
+        </div>
+        
+        <!-- File Structure -->
+        <div class="test-section">
+            <h2>📁 الملفات المضافة/المعدلة</h2>
+            <ul class="checklist">
+                <li>`config/whatsapp_config.php` - ملف إعدادات WhatsApp</li>
+                <li>`includes/functions.php` - دوال إنشاء الرسائل</li>
+                <li>`booking_flow.php` - معالج نموذج الحجز</li>
+                <li>`WHATSAPP_BOOKING_README.md` - دليل الاستخدام</li>
+                <li>`test-whatsapp.html` - صفحة الاختبار هذه</li>
+            </ul>
+        </div>
+        
+        <!-- Configuration -->
+        <div class="test-section">
+            <h2>⚙️ الخطوة الأولى: التكوين</h2>
+            <p>افتح الملف <strong>`config/whatsapp_config.php`</strong> وعدّل رقم WhatsApp:</p>
+            <div class="code-block">
+&lt;?php
+define('WHATSAPP_NUMBER', '201001234567'); // استبدل برقمك
+?&gt;
+            </div>
+            <p><strong>أمثلة صحيحة:</strong></p>
+            <table class="table">
+                <tr>
+                    <th>الدولة</th>
+                    <th>الكود</th>
+                    <th>المثال</th>
+                </tr>
+                <tr>
+                    <td>🇪🇬 مصر</td>
+                    <td>20</td>
+                    <td>201001234567</td>
+                </tr>
+                <tr>
+                    <td>🇸🇦 السعودية</td>
+                    <td>966</td>
+                    <td>966501234567</td>
+                </tr>
+                <tr>
+                    <td>🇦🇪 الإمارات</td>
+                    <td>971</td>
+                    <td>971501234567</td>
+                </tr>
+                <tr>
+                    <td>🇯🇴 الأردن</td>
+                    <td>962</td>
+                    <td>962791234567</td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- Testing -->
+        <div class="test-section">
+            <h2>🧪 الخطوة الثانية: الاختبار</h2>
+            <ol class="checklist">
+                <li>اذهب إلى صفحة تفاصيل أي سيارة</li>
+                <li>اضغط على "احجز هذه السيارة"</li>
+                <li>ملأ البيانات والتواريخ</li>
+                <li>اضغط على "تأكيد طلب الحجز"</li>
+                <li>اضغط على "متابعة الحجز عبر WhatsApp"</li>
+            </ol>
+        </div>
+        
+        <!-- What's New -->
+        <div class="test-section">
+            <h2>🎯 ما الجديد؟</h2>
+            <ul class="checklist">
+                <li>رسالة WhatsApp تحتوي على بيانات الحجز الكاملة</li>
+                <li>توليد تلقائي لرابط WhatsApp</li>
+                <li>حفظ البيانات في قاعدة البيانات</li>
+                <li>واجهة ذات طابع احترافي</li>
+                <li>رسائل مشفرة بشكل صحيح</li>
+            </ul>
+        </div>
+        
+        <!-- Message Preview -->
+        <div class="test-section">
+            <h2>📱 معاينة الرسالة</h2>
+            <p>الرسالة التي سيرسلها العميل:</p>
+            <div class="code-block">
+*طلب حجز سيارة جديد* 🚗
+
+*بيانات العميل:*
+👤 الاسم: محمد أحمد
+📧 البريد: customer@email.com
+📱 الهاتف: +201001234567
+
+*تفاصيل الحجز:*
+🏎️ السيارة: BMW M5
+📅 الاستلام: 15/03/2026
+📅 العودة: 18/03/2026
+⏱️ عدد الأيام: 3 يوم
+💰 السعر اليومي: $150
+💵 الإجمالي: $450
+            </div>
+        </div>
+        
+        <!-- Troubleshooting -->
+        <div class="test-section">
+            <h2>🔧 استكشاف الأخطاء</h2>
+            <div class="status error">
+                <span class="icon">⚠</span>
+                <span><strong>الخطأ:</strong> لا يفتح WhatsApp</span>
+            </div>
+            <p>✓ تأكد من تثبيت تطبيق WhatsApp أو WhatsApp Web</p>
+            <p>✓ تحقق من صحة رقم الهاتف (بدون + أو مسافات)</p>
+            
+            <div class="status error">
+                <span class="icon">⚠</span>
+                <span><strong>الخطأ:</strong> الرسالة فارغة أو غريبة</span>
+            </div>
+            <p>✓ تحقق من ملف `includes/functions.php`</p>
+            <p>✓ تأكد من وجود جميع البيانات في النموذج</p>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="test-section">
+            <h2>🔗 روابط سريعة</h2>
+            <a href="../index.php" class="button">🏠 الرئيسية</a>
+            <a href="../vehicles_gallery.php" class="button secondary">🚗 الأسطول</a>
+            <a href="../car_details.php?id=1" class="button">🔍 تفاصيل السيارة</a>
+        </div>
+        
+        <div class="footer">
+            <p>AutoLine - نظام إدارة حجوزات السيارات الفاخرة</p>
+            <p>تم تطوير ميزة الحجز عبر WhatsApp</p>
+            <p>2026 © جميع الحقوق محفوظة</p>
+        </div>
+    </div>
+</body>
+</html>

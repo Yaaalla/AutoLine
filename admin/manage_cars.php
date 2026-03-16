@@ -54,6 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_car'])) {
         $seats = $_POST['seats'];
         $transmission = $_POST['transmission'];
         $fuel = $_POST['fuel_type'];
+        $color = $_POST['color'];
+        $mileage = $_POST['mileage'];
+        $car_condition = $_POST['car_condition'];
+        $tire_condition = $_POST['tire_condition'];
         $discount = isset($_POST['discount']) ? (int)$_POST['discount'] : 0;
         
         $image_path = $_POST['image_url']; 
@@ -72,8 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_car'])) {
         if (empty($image_path)) throw new Exception("Please provide an image URL or upload a file.");
 
         $pdo->beginTransaction();
-        $stmt = $pdo->prepare("INSERT INTO cars (brand, model, price_per_day, seats, transmission, fuel_type, image_path, discount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$brand, $model, $price, $seats, $transmission, $fuel, $image_path, $discount]);
+        $stmt = $pdo->prepare("INSERT INTO cars (brand, model, price_per_day, seats, transmission, fuel_type, color, mileage, car_condition, tire_condition, image_path, discount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$brand, $model, $price, $seats, $transmission, $fuel, $color, $mileage, $car_condition, $tire_condition, $image_path, $discount]);
         $new_car_id = $pdo->lastInsertId();
 
         // Handle Multiple Additional Images
@@ -359,12 +363,28 @@ $displayed_cars = count($cars);
                                     <input type="text" name="model" placeholder="M8 Competition" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-slate-100 focus:outline-none"/>
                                 </div>
                                 <div class="space-y-2">
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">المسافة (كم)</label>
+                                    <input type="number" name="mileage" placeholder="5000" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-slate-100 focus:outline-none"/>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">الحالة (%)</label>
+                                    <input type="number" name="car_condition" placeholder="95" min="1" max="100" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-slate-100 focus:outline-none"/>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">حالة الكاوتش</label>
+                                    <input type="text" name="tire_condition" placeholder="ممتازة" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-slate-100 focus:outline-none"/>
+                                </div>
+                                <div class="space-y-2">
                                     <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">السعر اليومي (ج.م)</label>
                                     <input type="number" name="price" placeholder="450" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-[#c9a96e] font-black focus:outline-none"/>
                                 </div>
                                 <div class="space-y-2">
                                     <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">نوع الوقود</label>
                                     <input type="text" name="fuel_type" placeholder="بنزين 98" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-slate-100 focus:outline-none"/>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">اللون</label>
+                                    <input type="text" name="color" placeholder="أسود ملكي" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-slate-100 focus:outline-none"/>
                                 </div>
                                 <div class="space-y-2">
                                     <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">المقاعد</label>

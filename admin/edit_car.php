@@ -52,6 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_car'])) {
         $seats = $_POST['seats'];
         $transmission = $_POST['transmission'];
         $fuel = $_POST['fuel_type'];
+        $color = $_POST['color'];
+        $mileage = $_POST['mileage'];
+        $car_condition = $_POST['car_condition'];
+        $tire_condition = $_POST['tire_condition'];
         $status = $_POST['status'];
         $discount = isset($_POST['discount']) ? (int)$_POST['discount'] : 0;
         
@@ -79,8 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_car'])) {
             }
         }
 
-        $stmt = $pdo->prepare("UPDATE cars SET brand=?, model=?, price_per_day=?, seats=?, transmission=?, fuel_type=?, image_path=?, status=?, discount=? WHERE id=?");
-        $stmt->execute([$brand, $model, $price, $seats, $transmission, $fuel, $image_path, $status, $discount, $id]);
+        $stmt = $pdo->prepare("UPDATE cars SET brand=?, model=?, price_per_day=?, seats=?, transmission=?, fuel_type=?, color=?, mileage=?, car_condition=?, tire_condition=?, image_path=?, status=?, discount=? WHERE id=?");
+        $stmt->execute([$brand, $model, $price, $seats, $transmission, $fuel, $color, $mileage, $car_condition, $tire_condition, $image_path, $status, $discount, $id]);
 
         // Handle New Gallery Images
         if (isset($_FILES['new_gallery'])) {
@@ -201,6 +205,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_car'])) {
                                 <div class="space-y-2">
                                     <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mr-1">السعر اليومي (ج.م)</label>
                                     <input type="number" name="price" value="<?= htmlspecialchars($car['price_per_day']) ?>" required class="w-full input-premium rounded-2xl px-6 py-4 text-sm text-[#c9a96e] font-black focus:outline-none"/>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mr-1">اللون</label>
+                                    <input type="text" name="color" value="<?= htmlspecialchars($car['color'] ?? '') ?>" required class="w-full input-premium rounded-2xl px-6 py-4 text-sm text-slate-100 focus:outline-none"/>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mr-1">المسافة (كم)</label>
+                                    <input type="number" name="mileage" value="<?= htmlspecialchars($car['mileage'] ?? '') ?>" required class="w-full input-premium rounded-2xl px-6 py-4 text-sm text-slate-100 focus:outline-none"/>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mr-1">الحالة (%)</label>
+                                    <input type="number" name="car_condition" value="<?= htmlspecialchars($car['car_condition'] ?? '') ?>" min="1" max="100" required class="w-full input-premium rounded-2xl px-6 py-4 text-sm text-slate-100 focus:outline-none"/>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mr-1">حالة الكاوتش</label>
+                                    <input type="text" name="tire_condition" value="<?= htmlspecialchars($car['tire_condition'] ?? '') ?>" required class="w-full input-premium rounded-2xl px-6 py-4 text-sm text-slate-100 focus:outline-none"/>
                                 </div>
                                 <div class="space-y-2">
                                     <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mr-1">عدد المقاعد</label>

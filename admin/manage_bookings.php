@@ -189,7 +189,7 @@ $bookings = $stmt->fetchAll();
                                 عدد الحجوزات: <span class="text-[#c9a96e]"><?= count($bookings) ?></span>
                             </p>
                         </div>
-                        <a href="../booking_flow.html" class="px-6 py-3 rounded-xl bg-[#c9a96e] hover:bg-white text-[#12110f] font-black text-xs uppercase tracking-widest transition-all inline-flex items-center gap-2">
+                        <a href="../booking_flow.php" class="px-6 py-3 rounded-xl bg-[#c9a96e] hover:bg-white text-[#12110f] font-black text-xs uppercase tracking-widest transition-all inline-flex items-center gap-2">
                             <span class="material-symbols-outlined">add</span>
                             حجز جديد
                         </a>

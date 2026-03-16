@@ -18,14 +18,38 @@ try {
      $pdo = new PDO($dsn, $user, $pass, $options);
      
      // Self-healing: Check if 'discount' column exists in 'cars' table
+     // Self-healing: Check if 'color' column exists
      try {
-         $stmt = $pdo->query("SHOW COLUMNS FROM cars LIKE 'discount'");
+         $stmt = $pdo->query("SHOW COLUMNS FROM cars LIKE 'color'");
          if (!$stmt->fetch()) {
-             $pdo->exec("ALTER TABLE cars ADD COLUMN discount INT DEFAULT 0");
+             $pdo->exec("ALTER TABLE cars ADD COLUMN color VARCHAR(50) DEFAULT NULL AFTER fuel_type");
          }
-     } catch (Exception $e) {
-         // Silently fail if table doesn't exist yet or other issues
-     }
+     } catch (Exception $e) {}
+
+
+     // Self-healing: Check if 'mileage' column exists
+     try {
+         $stmt = $pdo->query("SHOW COLUMNS FROM cars LIKE 'mileage'");
+         if (!$stmt->fetch()) {
+             $pdo->exec("ALTER TABLE cars ADD COLUMN mileage INT DEFAULT NULL AFTER color");
+         }
+     } catch (Exception $e) {}
+
+     // Self-healing: Check if 'car_condition' column exists
+     try {
+         $stmt = $pdo->query("SHOW COLUMNS FROM cars LIKE 'car_condition'");
+         if (!$stmt->fetch()) {
+             $pdo->exec("ALTER TABLE cars ADD COLUMN car_condition INT DEFAULT NULL AFTER mileage");
+         }
+     } catch (Exception $e) {}
+
+     // Self-healing: Check if 'tire_condition' column exists
+     try {
+         $stmt = $pdo->query("SHOW COLUMNS FROM cars LIKE 'tire_condition'");
+         if (!$stmt->fetch()) {
+             $pdo->exec("ALTER TABLE cars ADD COLUMN tire_condition VARCHAR(100) DEFAULT NULL AFTER car_condition");
+         }
+     } catch (Exception $e) {}
      
      // Self-healing: Create 'blogs' table if it doesn't exist
      try {

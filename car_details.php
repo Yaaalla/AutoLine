@@ -72,21 +72,41 @@ $other_cars = $other_stmt->fetchAll();
                     <?php endif; ?>
                 </div>
 
-                <div class="grid grid-cols-3 gap-6 mb-10 py-8 border-y border-slate-200 dark:border-primary/5">
+                <div class="grid grid-cols-2 lg:grid-cols-3 gap-6 mb-10 py-8 border-y border-slate-200 dark:border-primary/5">
                     <div class="text-center group">
                         <span class="material-symbols-outlined text-primary text-3xl mb-2 group-hover:scale-110 transition-transform">settings</span>
                         <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">ناقل الحركة</p>
-                        <p class="text-sm font-black uppercase"><?= $car['transmission'] == 'Auto' ? 'أوتوماتيك' : 'يدوي' ?></p>
+                        <p class="text-xs font-black uppercase"><?= $car['transmission'] == 'Auto' ? 'أوتوماتيك' : 'يدوي' ?></p>
                     </div>
                     <div class="text-center group">
                         <span class="material-symbols-outlined text-primary text-3xl mb-2 group-hover:scale-110 transition-transform">airline_seat_recline_extra</span>
                         <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">المقاعد</p>
-                        <p class="text-sm font-black uppercase"><?= $car['seats'] ?> أشخاص</p>
+                        <p class="text-xs font-black uppercase"><?= $car['seats'] ?> أشخاص</p>
                     </div>
                     <div class="text-center group">
                         <span class="material-symbols-outlined text-primary text-3xl mb-2 group-hover:scale-110 transition-transform">local_gas_station</span>
                         <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">الوقود</p>
-                        <p class="text-sm font-black uppercase"><?= $car['fuel_type'] == 'Petrol' ? 'بنزين' : ($car['fuel_type'] == 'Diesel' ? 'ديزل' : $car['fuel_type']) ?></p>
+                        <p class="text-xs font-black uppercase"><?= $car['fuel_type'] == 'Petrol' ? 'بنزين' : ($car['fuel_type'] == 'Diesel' ? 'ديزل' : $car['fuel_type']) ?></p>
+                    </div>
+                    <div class="text-center group">
+                        <span class="material-symbols-outlined text-primary text-3xl mb-2 group-hover:scale-110 transition-transform">speed</span>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">المسافة</p>
+                        <p class="text-xs font-black uppercase"><?= number_format($car['mileage'] ?? 0) ?> كم</p>
+                    </div>
+                    <div class="text-center group">
+                        <span class="material-symbols-outlined text-primary text-3xl mb-2 group-hover:scale-110 transition-transform">verified_user</span>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">حالة السيارة</p>
+                        <p class="text-xs font-black uppercase"><?= htmlspecialchars($car['car_condition'] ?? '-') ?>%</p>
+                    </div>
+                    <div class="text-center group">
+                        <span class="material-symbols-outlined text-primary text-3xl mb-2 group-hover:scale-110 transition-transform">tire_repair</span>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">حالة الكاوتش</p>
+                        <p class="text-xs font-black uppercase"><?= htmlspecialchars($car['tire_condition'] ?? '-') ?></p>
+                    </div>
+                    <div class="text-center group">
+                        <span class="material-symbols-outlined text-primary text-3xl mb-2 group-hover:scale-110 transition-transform">palette</span>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">اللون</p>
+                        <p class="text-xs font-black uppercase"><?= htmlspecialchars($car['color'] ?? '-') ?></p>
                     </div>
                 </div>
 

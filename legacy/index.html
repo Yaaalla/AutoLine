@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AutoLux | Premium Car Rental &amp; Exotic Fleet</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#c9a96e",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#1e1a14",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased font-display">
+<div class="relative flex min-h-screen flex-col">
+<!-- Sticky Top Navigation -->
+<header class="fixed top-0 z-50 w-full border-b border-white/5 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="container mx-auto flex h-20 items-center justify-between px-6">
+<a href="index.html" class="flex items-center gap-3">
+<div class="text-primary">
+<span class="material-symbols-outlined text-4xl">diamond</span>
+</div>
+<h1 class="text-2xl font-extrabold tracking-tighter uppercase text-slate-900 dark:text-white">AutoLux</h1>
+</a>
+<nav class="hidden md:flex items-center gap-10">
+<a class="text-sm font-bold uppercase tracking-widest text-primary" href="index.html">Home</a>
+<a class="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors" href="vehicles_gallery.html">Fleet</a>
+<a class="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors" href="booking_flow.html">Book Now</a>
+<a class="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors" href="#">Contact</a>
+</nav>
+<div class="flex items-center gap-6">
+<button class="hidden lg:block text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">Login</button>
+<a href="booking_flow.html" class="bg-primary hover:bg-primary/90 text-background-dark px-6 py-2.5 rounded-lg text-sm font-black uppercase tracking-widest transition-all transform active:scale-95 shadow-lg shadow-primary/10">
+                        Reserve
+                    </a>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<!-- Hero Section -->
+<section class="relative h-[90vh] w-full overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/50 to-transparent z-10"></div>
+<div class="absolute inset-0 scale-105" data-alt="Luxury charcoal grey sedan parked in a modern architectural setting" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBnEPdZ9cCnCvEKoSRnen6_5rE1PPC0p-OwJZ-AZw1J8SBCYgNhXs68SmyuuEjnbAoP2wjPrKNq43UJcq4sU0P6-42Npk6_jd__XuYGSUfr1QP5Dd5TMmdhvt_tl9VxSBQKozmo1ixpgYZq1oz5zoHtov_ObX_bGNDBTD8GxJ3TfuRn0FIub1Le2RzCBhi6n9zDOtRkGzPTOOUE6bAIcw7_85Ln6CxNUnhsvMnrtAxJZuAoGKo2Fud8va4iILekSB_FrawIouUrIdxd'); background-size: cover; background-position: center;"></div>
+<div class="container mx-auto relative z-20 h-full flex flex-col justify-center px-6 pt-20">
+<div class="max-w-3xl space-y-6">
+<span class="inline-block px-4 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-black uppercase tracking-widest">Est. 2012 • Dubai • London • NY</span>
+<h2 class="text-6xl md:text-8xl font-black text-white leading-[0.9] tracking-tighter">ELITE MOBILITY<br/>DEFINED.</h2>
+<p class="text-slate-300 text-lg md:text-xl font-medium max-w-xl leading-relaxed">Experience the pinnacle of automotive luxury. Access an exclusive collection of the world's most prestigious vehicles, delivered to your doorstep.</p>
+<div class="flex flex-col sm:flex-row gap-4 pt-4">
+<a href="vehicles_gallery.html" class="bg-white text-background-dark px-10 py-4 rounded-xl font-black uppercase tracking-widest text-sm text-center hover:bg-primary transition-all">Explore Fleet</a>
+<a href="booking_flow.html" class="glass-panel text-white px-10 py-4 rounded-xl font-black uppercase tracking-widest text-sm text-center hover:bg-white/10 transition-all border border-white/20">Book Instantly</a>
+</div>
+</div>
+</div>
+<!-- Scroll Indicator -->
+<div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 animate-bounce text-primary/50">
+<span class="material-symbols-outlined text-4xl">expand_more</span>
+</div>
+</section>
+<!-- Booking Widget Bar -->
+<section class="container mx-auto px-6 -mt-16 relative z-30">
+<div class="glass-panel p-8 rounded-2xl shadow-2xl shadow-black/50 border border-white/10">
+<form class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="space-y-2">
+<label class="text-[10px] font-black text-primary uppercase tracking-widest">Pickup Location</label>
+<div class="flex items-center gap-3 text-white border-b border-white/10 pb-2">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<input class="bg-transparent border-none p-0 text-sm font-bold focus:ring-0 placeholder:text-slate-500 w-full" placeholder="Where do you start?" type="text"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] font-black text-primary uppercase tracking-widest">Date &amp; Time</label>
+<div class="flex items-center gap-3 text-white border-b border-white/10 pb-2">
+<span class="material-symbols-outlined text-sm">event</span>
+<input class="bg-transparent border-none p-0 text-sm font-bold focus:ring-0 w-full" type="datetime-local" value="2023-10-24T10:00"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] font-black text-primary uppercase tracking-widest">Preferred Class</label>
+<div class="flex items-center gap-3 text-white border-b border-white/10 pb-2">
+<span class="material-symbols-outlined text-sm">stars</span>
+<select class="bg-transparent border-none p-0 text-sm font-bold focus:ring-0 w-full cursor-pointer">
+<option class="bg-background-dark">Luxury Sedan</option>
+<option class="bg-background-dark">Exotic SUV</option>
+<option class="bg-background-dark">Super Sport</option>
+</select>
+</div>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-background-dark rounded-xl font-black uppercase tracking-widest text-sm shadow-xl shadow-primary/20 transition-transform active:scale-95">
+                            Check Availability
+                        </button>
+</form>
+</div>
+</section>
+<!-- Categories Grid -->
+<section class="container mx-auto px-6 py-24">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div class="space-y-2">
+<h3 class="text-xs font-black text-primary uppercase tracking-[0.2em]">The Collection</h3>
+<h4 class="text-4xl md:text-5xl font-black tracking-tighter">CURATED EXCELLENCE</h4>
+</div>
+<p class="text-slate-500 text-sm font-medium max-w-sm">From bespoke British engineering to unmatched Italian performance, explore our diverse segments of excellence.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Cat 1 -->
+<div class="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-slate-900 border border-white/5">
+<div class="absolute inset-0 bg-black/40 z-10 group-hover:bg-black/20 transition-all"></div>
+<img alt="Sleek modern sports car in profile" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Classic red sports car at dusk with headlights on" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcDJry00dbZhW59bBVEpo_ClKie7QLoeRGLG1c-5twckJvEsOl0fyajB7vDv3hY-LwxIlUY2QWS-HSDfHH8Jkmhxf1p_KxFyM_w4nmgUybHcB_GpMgGpA1Q7H4lLr-j5JT9THqspxiMEqX-zwdvoqa6PThlu6bIrDtHGZJTXpsBxvsjGDaqi7gGmFr32rwx0nMhuI-2Wh22NKw_VwNb1RxK1tAdldxDXVZoB0R7FLAnvc3oeYtAC5X8xyoyG0roJnn44znkdghOA5p"/>
+<div class="absolute bottom-8 left-8 z-20 space-y-2">
+<h5 class="text-3xl font-black text-white leading-none">SUPER SPORT</h5>
+<p class="text-primary text-xs font-bold uppercase tracking-widest flex items-center gap-2">Explore Segment <span class="material-symbols-outlined text-sm">arrow_forward</span></p>
+</div>
+</div>
+<!-- Cat 2 -->
+<div class="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-slate-900 border border-white/5">
+<div class="absolute inset-0 bg-black/40 z-10 group-hover:bg-black/20 transition-all"></div>
+<img alt="Large white luxury SUV front view" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Black luxury SUV driving through a mountain pass" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHFP5kdY0K1m9kMgH_-BvVV0w_xrO7egIeynCQD6wPlN3KNJJwT7ONIZ7DwxZlouCBDGLtFY2Gy_RQiE_iqAOoU5saxOMJTCPNLVk38uxVvM2xQlwRtFzix2UMyUA4mzdAxsf5tGhdps9J_2bPsypgPjeMZZdMMUVQdQqYv0pBwZBlynPlbMRSWCh8n_IJKLizcCNvA-qLsRI2hMtuTcjfQsJVIB7gKMuzEXvZKIA2Gkm0gt0faTzvTKj_lCVajLHBFlqxgABOHN5M"/>
+<div class="absolute bottom-8 left-8 z-20 space-y-2">
+<h5 class="text-3xl font-black text-white leading-none">ELITE SUV</h5>
+<p class="text-primary text-xs font-bold uppercase tracking-widest flex items-center gap-2">Explore Segment <span class="material-symbols-outlined text-sm">arrow_forward</span></p>
+</div>
+</div>
+<!-- Cat 3 -->
+<div class="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-slate-900 border border-white/5">
+<div class="absolute inset-0 bg-black/40 z-10 group-hover:bg-black/20 transition-all"></div>
+<img alt="Front profile of a silver luxury sedan" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Classic black luxury car parked in front of a manor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_e5OwHlZLhveh9r00JnVnFw3kvM2-GSpy2RARRs9PM4fj7iWkD6i2xTgjwKNOWuUqJULIqs8WjGnnrtyGpWlcjNinJhCGCJ_F3-BNYoCsGC0nbmiqdVwa-QA2QyBcnSDk0hkERTmRdEmiiql1kt6_-DHsz22t_beMBQvNBGwDIWdcdEJsbnTHeuDip7sHVb0A16Bv6ThA15kFPYstpBK03hSPiD_XM9IhHHdWUszKRpMOyXp8YoRjV2LkX285vIlV2zKPxyJWIj05"/>
+<div class="absolute bottom-8 left-8 z-20 space-y-2">
+<h5 class="text-3xl font-black text-white leading-none">PRESTIGE</h5>
+<p class="text-primary text-xs font-bold uppercase tracking-widest flex items-center gap-2">Explore Segment <span class="material-symbols-outlined text-sm">arrow_forward</span></p>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Spotlight -->
+<section class="bg-white/5 py-24">
+<div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+<div class="relative rounded-3xl overflow-hidden aspect-square">
+<img alt="Luxury car interior with stitching detail" class="h-full w-full object-cover grayscale" data-alt="Close up of a leather car seat with intricate stitching" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxFs4V2idyeM0K2KYntTJpMUZOBZF1KvK-Wt7It69HcqQyoQ4QP0tOmc2iTSUC-YxTRPZPG7R-gSxppvoNaIIro0glWgwszOsMvBwMr_s2jNOvARx3vhVvc2LTxQrnAY0GpfdFPd7yhhXrhia8NkSgfZExu4WFkK6eqqZo4lMVaSmAuFvtFxOM_-tulCy87KOwiQ2s93cHspuU1Qr7V4qrl8NUHmgypFA6EOYAEX3zwmJwxqmYvH7xuf1wZSmg7r_J-sXndYszPuge"/>
+<div class="absolute inset-0 bg-primary/20 mix-blend-multiply"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark to-transparent"></div>
+</div>
+<div class="space-y-12">
+<div class="space-y-4">
+<h3 class="text-xs font-black text-primary uppercase tracking-[0.2em]">Unmatched Standard</h3>
+<h4 class="text-4xl md:text-5xl font-black tracking-tighter">BEYOND RENTAL</h4>
+<p class="text-slate-400 font-medium text-lg leading-relaxed">We don't just provide cars; we design journeys. Every booking includes our signature premium benefits.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+<div class="space-y-3">
+<div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">concierge</span>
+</div>
+<h5 class="text-lg font-bold">24/7 CONCIERGE</h5>
+<p class="text-slate-500 text-sm font-medium">Personal assistance for any request during your rental period.</p>
+</div>
+<div class="space-y-3">
+<div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">delivery_dining</span>
+</div>
+<h5 class="text-lg font-bold">VALET DELIVERY</h5>
+<p class="text-slate-500 text-sm font-medium">Bespoke delivery and collection at any city location.</p>
+</div>
+<div class="space-y-3">
+<div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">shield</span>
+</div>
+<h5 class="text-lg font-bold">TOTAL PROTECTION</h5>
+<p class="text-slate-500 text-sm font-medium">Comprehensive premium insurance coverage with zero worries.</p>
+</div>
+<div class="space-y-3">
+<div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">verified</span>
+</div>
+<h5 class="text-lg font-bold">ELITE FLEET</h5>
+<p class="text-slate-500 text-sm font-medium">Only the latest models with the highest specifications.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-black py-20">
+<div class="container mx-auto px-6">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/10 pb-16">
+<div class="col-span-1 md:col-span-1 space-y-6">
+<a href="index.html" class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-4xl">diamond</span>
+<h2 class="text-2xl font-extrabold uppercase tracking-tighter">AutoLux</h2>
+</a>
+<p class="text-slate-500 text-sm font-medium leading-relaxed">Establishing the global standard for luxury mobility since 2012. Headquartered in London, serving the world's most discerning clients.</p>
+<div class="flex gap-4">
+<a class="size-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors hover:text-background-dark" href="#"><span class="material-symbols-outlined text-xl">camera</span></a>
+<a class="size-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors hover:text-background-dark" href="#"><span class="material-symbols-outlined text-xl">facebook</span></a>
+<a class="size-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors hover:text-background-dark" href="#"><span class="material-symbols-outlined text-xl">share</span></a>
+</div>
+</div>
+<div>
+<h6 class="text-xs font-black uppercase tracking-widest text-primary mb-8">Navigation</h6>
+<ul class="space-y-4">
+<li><a class="text-sm font-bold text-slate-400 hover:text-white transition-colors" href="vehicles_gallery.html">Exotic Fleet</a></li>
+<li><a class="text-sm font-bold text-slate-400 hover:text-white transition-colors" href="#">Luxury Tours</a></li>
+<li><a class="text-sm font-bold text-slate-400 hover:text-white transition-colors" href="#">Membership</a></li>
+<li><a class="text-sm font-bold text-slate-400 hover:text-white transition-colors" href="#">Concierge</a></li>
+</ul>
+</div>
+<div>
+<h6 class="text-xs font-black uppercase tracking-widest text-primary mb-8">Company</h6>
+<ul class="space-y-4">
+<li><a class="text-sm font-bold text-slate-400 hover:text-white transition-colors" href="#">Our Story</a></li>
+<li><a class="text-sm font-bold text-slate-400 hover:text-white transition-colors" href="#">Careers</a></li>
+<li><a class="text-sm font-bold text-slate-400 hover:text-white transition-colors" href="#">Sustainability</a></li>
+<li><a class="text-sm font-bold text-slate-400 hover:text-white transition-colors" href="#">Gift Cards</a></li>
+</ul>
+</div>
+<div>
+<h6 class="text-xs font-black uppercase tracking-widest text-primary mb-8">Support</h6>
+<ul class="space-y-4">
+<li><a class="text-sm font-bold text-slate-400 hover:text-white transition-colors" href="#">Contact Us</a></li>
+<li><a class="text-sm font-bold text-slate-400 hover:text-white transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="text-sm font-bold text-slate-400 hover:text-white transition-colors" href="#">Terms of Service</a></li>
+<li><a class="text-sm font-bold text-slate-400 hover:text-white transition-colors" href="#">Help Center</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-[10px] font-black text-slate-600 uppercase tracking-widest">© 2023 AutoLux Exotic Mobility. Curated with excellence.</p>
+<div class="flex gap-8 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+<a class="hover:text-primary" href="#">Terms</a>
+<a class="hover:text-primary" href="#">Privacy</a>
+<a class="hover:text-primary" href="#">Cookies</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

@@ -2,14 +2,41 @@
 require_once 'config/db_connect.php'; 
 include 'includes/header.php'; 
 
-// Fetch all cars that are available or reserved
-$stmt = $pdo->query("SELECT c.*, MAX(b.return_date) as last_return_date 
-                    FROM cars c 
-                    LEFT JOIN bookings b ON c.id = b.car_id AND b.status = 'confirmed'
-                    WHERE c.status IN ('available', 'reserved') 
-                    GROUP BY c.id 
-                    ORDER BY c.status ASC, c.created_at DESC");
+// Search and Filter Logic
+$brand_filter = $_GET['brand'] ?? "";
+$color_filter = $_GET['color'] ?? "";
+$max_price = $_GET['max_price'] ?? "";
+
+$query = "SELECT c.*, MAX(b.return_date) as last_return_date 
+          FROM cars c 
+          LEFT JOIN bookings b ON c.id = b.car_id AND b.status = 'confirmed'
+          WHERE c.status IN ('available', 'reserved')";
+$params = [];
+
+if (!empty($brand_filter)) {
+    $query .= " AND c.brand = ?";
+    $params[] = $brand_filter;
+}
+
+if (!empty($color_filter)) {
+    $query .= " AND c.color = ?";
+    $params[] = $color_filter;
+}
+
+
+if (!empty($max_price)) {
+    $query .= " AND c.price_per_day <= ?";
+    $params[] = $max_price;
+}
+
+$query .= " GROUP BY c.id ORDER BY c.status ASC, c.created_at DESC";
+$stmt = $pdo->prepare($query);
+$stmt->execute($params);
 $cars = $stmt->fetchAll();
+
+// Fetch dynamic options for filters
+$brands = $pdo->query("SELECT DISTINCT brand FROM cars ORDER BY brand")->fetchAll(PDO::FETCH_COLUMN);
+$colors = $pdo->query("SELECT DISTINCT color FROM cars WHERE color IS NOT NULL AND color != '' ORDER BY color")->fetchAll(PDO::FETCH_COLUMN);
 ?>
 
 <main class="pt-24 min-h-screen">
@@ -22,6 +49,49 @@ $cars = $stmt->fetchAll();
     </div>
 
     <div class="container mx-auto px-6 md:px-20 py-12">
+        <!-- Filter Section -->
+        <div class="mb-12 glass p-8 rounded-2xl border border-primary/10">
+            <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 items-end">
+                <!-- Brand Filter -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-primary uppercase tracking-widest">الماركة</label>
+                    <select name="brand" class="w-full bg-background-dark/50 border border-primary/20 rounded-lg px-4 py-2.5 text-sm text-white focus:border-primary focus:outline-none appearance-none cursor-pointer">
+                        <option value="">كل الماركات</option>
+                        <?php foreach ($brands as $brand): ?>
+                            <option value="<?= htmlspecialchars($brand) ?>" <?= $brand_filter == $brand ? 'selected' : '' ?>><?= htmlspecialchars($brand) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <!-- Color Filter -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-primary uppercase tracking-widest">اللون</label>
+                    <select name="color" class="w-full bg-background-dark/50 border border-primary/20 rounded-lg px-4 py-2.5 text-sm text-white focus:border-primary focus:outline-none appearance-none cursor-pointer">
+                        <option value="">كل الألوان</option>
+                        <?php foreach ($colors as $color): ?>
+                            <option value="<?= htmlspecialchars($color) ?>" <?= $color_filter == $color ? 'selected' : '' ?>><?= htmlspecialchars($color) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+
+                <!-- Price Filter -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-primary uppercase tracking-widest">السعر (حد أقصى)</label>
+                    <input type="number" name="max_price" value="<?= htmlspecialchars($max_price) ?>" placeholder="مثال: 1000" class="w-full bg-background-dark/50 border border-primary/20 rounded-lg px-4 py-2.5 text-sm text-white focus:border-primary focus:outline-none"/>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-2">
+                    <button type="submit" class="flex-1 bg-primary text-background-dark font-black py-2.5 rounded-lg hover:bg-primary/90 transition-all text-sm uppercase tracking-widest">بحث</button>
+                    <?php if ($brand_filter || $color_filter || $year_filter || $max_price): ?>
+                        <a href="vehicles_gallery.php" class="bg-white/5 text-primary border border-primary/20 p-2.5 rounded-lg hover:bg-white/10 transition-all flex items-center justify-center">
+                            <span class="material-symbols-outlined text-xl">refresh</span>
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </form>
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <?php if (count($cars) > 0): ?>
                 <?php foreach ($cars as $car): ?>
