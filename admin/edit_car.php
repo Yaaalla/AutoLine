@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 
 session_start();
 if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit; }
+if (($_SESSION['admin_role'] ?? 'admin') !== 'admin') { header("Location: manage_blogs.php"); exit; }
 require_once '../config/db_connect.php';
 require_once '../includes/functions.php';
 
@@ -52,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_car'])) {
         $transmission = $_POST['transmission'];
         $fuel = $_POST['fuel_type'];
         $status = $_POST['status'];
+        $discount = isset($_POST['discount']) ? (int)$_POST['discount'] : 0;
         
         $image_path = $car['image_path'];
 
@@ -77,8 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_car'])) {
             }
         }
 
-        $stmt = $pdo->prepare("UPDATE cars SET brand=?, model=?, price_per_day=?, seats=?, transmission=?, fuel_type=?, image_path=?, status=? WHERE id=?");
-        $stmt->execute([$brand, $model, $price, $seats, $transmission, $fuel, $image_path, $status, $id]);
+        $stmt = $pdo->prepare("UPDATE cars SET brand=?, model=?, price_per_day=?, seats=?, transmission=?, fuel_type=?, image_path=?, status=?, discount=? WHERE id=?");
+        $stmt->execute([$brand, $model, $price, $seats, $transmission, $fuel, $image_path, $status, $discount, $id]);
 
         // Handle New Gallery Images
         if (isset($_FILES['new_gallery'])) {
@@ -111,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_car'])) {
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>تعديل السيارة | أوتو لوكس</title>
+    <title>تعديل السيارة | أوتو لاين</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
@@ -197,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_car'])) {
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="space-y-2">
-                                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mr-1">السعر اليومي ($)</label>
+                                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mr-1">السعر اليومي (ج.م)</label>
                                     <input type="number" name="price" value="<?= htmlspecialchars($car['price_per_day']) ?>" required class="w-full input-premium rounded-2xl px-6 py-4 text-sm text-[#c9a96e] font-black focus:outline-none"/>
                                 </div>
                                 <div class="space-y-2">
@@ -214,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_car'])) {
                                 <div class="space-y-2">
                                     <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mr-1">ناقل الحركة</label>
                                     <select name="transmission" class="w-full input-premium rounded-2xl px-6 py-4 text-sm text-slate-100 focus:outline-none appearance-none cursor-pointer">
-                                        <option value="Automatic" <?= $car['transmission'] == 'Automatic' ? 'selected' : '' ?>>أوتوماتيك</option>
+                                        <option value="Auto" <?= $car['transmission'] == 'Auto' ? 'selected' : '' ?>>أوتوماتيك</option>
                                         <option value="Manual" <?= $car['transmission'] == 'Manual' ? 'selected' : '' ?>>يدوي</option>
                                     </select>
                                 </div>
@@ -225,6 +227,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_car'])) {
                                         <option value="reserved" <?= $car['status'] == 'reserved' ? 'selected' : '' ?>>محجوز</option>
                                         <option value="maintenance" <?= $car['status'] == 'maintenance' ? 'selected' : '' ?>>صيانة</option>
                                     </select>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mr-1">الخصم (%)</label>
+                                    <input type="number" name="discount" value="<?= htmlspecialchars($car['discount'] ?? 0) ?>" min="0" max="100" class="w-full input-premium rounded-2xl px-6 py-4 text-sm text-emerald-500 font-black focus:outline-none"/>
                                 </div>
                             </div>
                         </div>

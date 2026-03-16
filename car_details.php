@@ -76,7 +76,7 @@ $other_cars = $other_stmt->fetchAll();
                     <div class="text-center group">
                         <span class="material-symbols-outlined text-primary text-3xl mb-2 group-hover:scale-110 transition-transform">settings</span>
                         <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">ناقل الحركة</p>
-                        <p class="text-sm font-black uppercase"><?= $car['transmission'] == 'Automatic' ? 'أوتوماتيك' : 'يدوي' ?></p>
+                        <p class="text-sm font-black uppercase"><?= $car['transmission'] == 'Auto' ? 'أوتوماتيك' : 'يدوي' ?></p>
                     </div>
                     <div class="text-center group">
                         <span class="material-symbols-outlined text-primary text-3xl mb-2 group-hover:scale-110 transition-transform">airline_seat_recline_extra</span>
@@ -95,7 +95,13 @@ $other_cars = $other_stmt->fetchAll();
                     <div class="flex justify-between items-end mb-8">
                         <div>
                             <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">السعر لكل يوم</p>
-                            <p class="text-4xl font-black">$<?= number_format($car['price_per_day']) ?></p>
+                            <?php if (isset($car['discount']) && $car['discount'] > 0): ?>
+                                <?php $discounted_price = $car['price_per_day'] * (1 - ($car['discount'] / 100)); ?>
+                                <p class="text-sm font-bold text-slate-500 line-through mb-1"><?= number_format($car['price_per_day']) ?> ج.م</p>
+                                <p class="text-4xl font-black text-primary"><?= number_format($discounted_price) ?> ج.م</p>
+                            <?php else: ?>
+                                <p class="text-4xl font-black"><?= number_format($car['price_per_day']) ?> ج.م</p>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <a href="booking_flow.php?car_id=<?= $car['id'] ?>" class="w-full bg-primary hover:bg-primary/90 text-background-dark py-4 rounded-xl font-black uppercase tracking-widest transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 mt-4 text-center">
@@ -118,7 +124,7 @@ $other_cars = $other_stmt->fetchAll();
                     <div class="p-4">
                         <h4 class="font-bold text-sm"><?= htmlspecialchars($other['brand'] . ' ' . $other['model']) ?></h4>
                         <div class="flex justify-between items-center mt-2">
-                            <span class="text-primary font-bold text-sm">$<?= number_format($other['price_per_day']) ?></span>
+                            <span class="text-primary font-bold text-sm"><?= number_format($other['price_per_day']) ?> ج.م</span>
                             <a href="car_details.php?id=<?= $other['id'] ?>" class="text-[10px] font-bold uppercase text-slate-500 hover:text-primary underline">عرض التفاصيل</a>
                         </div>
                     </div>

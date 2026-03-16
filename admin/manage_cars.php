@@ -4,12 +4,15 @@ ini_set('display_errors', 1);
 
 session_start();
 if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit; }
+if (($_SESSION['admin_role'] ?? 'admin') !== 'admin') { header("Location: manage_blogs.php"); exit; }
 require_once '../config/db_connect.php';
 require_once '../includes/functions.php';
 
 $success_msg = "";
 $error_msg = "";
 $admin_id = $_SESSION['admin_id'];
+ 
+// Delete Car Logic
 
 // Delete Car Logic
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
@@ -51,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_car'])) {
         $seats = $_POST['seats'];
         $transmission = $_POST['transmission'];
         $fuel = $_POST['fuel_type'];
+        $discount = isset($_POST['discount']) ? (int)$_POST['discount'] : 0;
         
         $image_path = $_POST['image_url']; 
 
@@ -68,8 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_car'])) {
         if (empty($image_path)) throw new Exception("Please provide an image URL or upload a file.");
 
         $pdo->beginTransaction();
-        $stmt = $pdo->prepare("INSERT INTO cars (brand, model, price_per_day, seats, transmission, fuel_type, image_path) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$brand, $model, $price, $seats, $transmission, $fuel, $image_path]);
+        $stmt = $pdo->prepare("INSERT INTO cars (brand, model, price_per_day, seats, transmission, fuel_type, image_path, discount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$brand, $model, $price, $seats, $transmission, $fuel, $image_path, $discount]);
         $new_car_id = $pdo->lastInsertId();
 
         // Handle Multiple Additional Images
@@ -109,6 +113,9 @@ if (isset($_SESSION['success'])) {
 // Search and Filter Logic
 $search = $_GET['search'] ?? "";
 $max_price = $_GET['max_price'] ?? "";
+$transmission_filter = $_GET['transmission'] ?? "";
+$fuel_filter = $_GET['fuel'] ?? "";
+$status_filter = $_GET['status'] ?? "";
 
 $query = "SELECT c.*, MAX(b.return_date) as last_return_date 
           FROM cars c 
@@ -127,17 +134,59 @@ if (!empty($max_price)) {
     $params[] = $max_price;
 }
 
+if (!empty($transmission_filter)) {
+    $query .= " AND c.transmission = ?";
+    $params[] = $transmission_filter;
+}
+
+if (!empty($fuel_filter)) {
+    $query .= " AND c.fuel_type LIKE ?";
+    $params[] = "%$fuel_filter%";
+}
+
+if (!empty($status_filter)) {
+    $query .= " AND c.status = ?";
+    $params[] = $status_filter;
+}
+
 $query .= " GROUP BY c.id ORDER BY c.created_at DESC";
 $stmt = $pdo->prepare($query);
 $stmt->execute($params);
 $cars = $stmt->fetchAll();
+
+// Get Fleet Statistics
+$stats = [];
+$stmt = $pdo->query("SELECT COUNT(*) as total FROM cars");
+$stats['total_cars'] = $stmt->fetch()['total'];
+
+$stmt = $pdo->query("SELECT COUNT(*) as available FROM cars WHERE status = 'available'");
+$stats['available'] = $stmt->fetch()['available'];
+
+$stmt = $pdo->query("SELECT COUNT(*) as reserved FROM cars WHERE status = 'reserved'");
+$stats['reserved'] = $stmt->fetch()['reserved'];
+
+$stmt = $pdo->query("SELECT COUNT(*) as maintenance FROM cars WHERE status = 'maintenance'");
+$stats['maintenance'] = $stmt->fetch()['maintenance'];
+
+$stmt = $pdo->query("SELECT SUM(price_per_day) as total_revenue FROM cars");
+$stats['daily_potential'] = $stmt->fetch()['total_revenue'] ?? 0;
+
+$stmt = $pdo->query("SELECT AVG(price_per_day) as avg_price FROM cars");
+$stats['avg_price'] = $stmt->fetch()['avg_price'] ?? 0;
+
+// Get unique fuel types
+$stmt = $pdo->query("SELECT DISTINCT fuel_type FROM cars ORDER BY fuel_type");
+$fuel_types = $stmt->fetchAll();
+
+// Count displayed cars
+$displayed_cars = count($cars);
 ?>
 <!DOCTYPE html>
 <html class="dark" lang="ar" dir="rtl">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>إدارة الأسطول | أوتو لوكس</title>
+    <title>إدارة الأسطول | أوتو لاين</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
@@ -173,6 +222,29 @@ $cars = $stmt->fetchAll();
 
         <main class="flex-1 overflow-y-auto p-8 lg:p-12">
             <div class="animate-fade-up max-w-[1600px] mx-auto">
+                
+                <!-- Success Message -->
+                <?php if (!empty($success_msg)): ?>
+                <div class="mb-8 p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-3 animate-fade-up">
+                    <span class="material-symbols-outlined text-emerald-500 text-xl flex-shrink-0">check_circle</span>
+                    <p class="text-emerald-500 font-bold flex-1"><?= htmlspecialchars($success_msg) ?></p>
+                    <button onclick="this.parentElement.style.display='none'" class="text-emerald-500 hover:text-emerald-400 flex-shrink-0">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <?php endif; ?>
+
+                <!-- Error Message -->
+                <?php if (!empty($error_msg)): ?>
+                <div class="mb-8 p-5 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center gap-3 animate-fade-up">
+                    <span class="material-symbols-outlined text-red-500 text-xl flex-shrink-0">error</span>
+                    <p class="text-red-500 font-bold flex-1"><?= htmlspecialchars($error_msg) ?></p>
+                    <button onclick="this.parentElement.style.display='none'" class="text-red-500 hover:text-red-400 flex-shrink-0">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <?php endif; ?>
+
                 <header class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div class="flex items-center gap-6">
                         <!-- Mobile Toggle -->
@@ -187,100 +259,192 @@ $cars = $stmt->fetchAll();
                 </header>
 
                 <div class="space-y-10">
-                    <!-- Toolbar & Search -->
-                    <div class="glass-card p-8 rounded-[2.5rem] flex flex-wrap gap-6 items-center justify-between border border-white/5">
-                        <form method="GET" class="flex items-center gap-6 flex-1 max-w-2xl">
-                            <div class="relative flex-1">
-                                <span class="material-symbols-outlined absolute right-5 top-1/2 -translate-y-1/2 text-slate-500 text-lg">search</span>
-                                <input type="text" name="search" value="<?= htmlspecialchars($search) ?>" placeholder="بحث عن موديل أو ماركة في الأسطول..." class="w-full bg-[#12110f]/60 border border-white/5 rounded-2xl pr-14 pl-6 py-4 text-sm text-white focus:border-[#c9a96e]/50 focus:outline-none focus:ring-4 focus:ring-[#c9a96e]/5 transition-all outline-none"/>
+                    <!-- Toolbar & Search with Advanced Filters -->
+                    <div class="glass-card p-8 rounded-[2.5rem] space-y-6 border border-white/5">
+                        <!-- Live Search -->
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute right-5 top-1/2 -translate-y-1/2 text-slate-500 text-lg pointer-events-none">search</span>
+                            <input type="text" id="liveSearch" value="<?= htmlspecialchars($search) ?>" placeholder="بحث فوري عن موديل أو ماركة..." autocomplete="off" class="w-full bg-[#12110f]/60 border border-white/5 rounded-2xl pr-14 pl-6 py-4 text-sm text-white focus:border-[#c9a96e]/50 focus:outline-none focus:ring-4 focus:ring-[#c9a96e]/5 transition-all"/>
+                            <span id="liveSearchClear" onclick="clearLiveSearch()" class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-300 cursor-pointer text-base hidden">close</span>
+                        </div>
+
+                        <!-- Advanced Filters Row -->
+                        <form method="GET" id="filtersForm" class="flex flex-wrap gap-4 items-end">
+                            <!-- Hidden search input to preserve live search -->
+                            <input type="hidden" name="search" id="searchHidden" value="<?= htmlspecialchars($search) ?>">
+                            
+                            <div class="flex-1 min-w-[150px]">
+                                <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2">السعر اليومي (الحد الأقصى)</label>
+                                <input type="number" name="max_price" value="<?= htmlspecialchars($max_price) ?>" placeholder="مثال: 500" class="w-full bg-[#12110f]/60 border border-white/5 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-[#c9a96e]/50 focus:outline-none transition-all"/>
                             </div>
-                            <button type="submit" class="p-4 bg-white/5 hover:bg-[#c9a96e] hover:text-[#12110f] rounded-2xl transition-all group">
-                                <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">tune</span>
-                            </button>
+
+                            <div class="flex-1 min-w-[150px]">
+                                <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2">ناقل الحركة</label>
+                                <select name="transmission" class="w-full bg-[#12110f]/60 border border-white/5 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-[#c9a96e]/50 focus:outline-none appearance-none cursor-pointer">
+                                    <option value="">كل الأنواع</option>
+                                    <option value="Auto" <?= $transmission_filter == 'Auto' ? 'selected' : '' ?>>أوتوماتيك</option>
+                                    <option value="Manual" <?= $transmission_filter == 'Manual' ? 'selected' : '' ?>>يدوي</option>
+                                </select>
+                            </div>
+
+                            <div class="flex-1 min-w-[150px]">
+                                <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2">نوع الوقود</label>
+                                <select name="fuel" class="w-full bg-[#12110f]/60 border border-white/5 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-[#c9a96e]/50 focus:outline-none appearance-none cursor-pointer">
+                                    <option value="">كل الأنواع</option>
+                                    <?php foreach ($fuel_types as $fuel): ?>
+                                        <option value="<?= htmlspecialchars($fuel['fuel_type']) ?>" <?= $fuel_filter == $fuel['fuel_type'] ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($fuel['fuel_type']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="flex-1 min-w-[150px]">
+                                <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2">الحالة</label>
+                                <select name="status" class="w-full bg-[#12110f]/60 border border-white/5 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:border-[#c9a96e]/50 focus:outline-none appearance-none cursor-pointer">
+                                    <option value="">جميع الحالات</option>
+                                    <option value="available" <?= $status_filter == 'available' ? 'selected' : '' ?>>متوفرة</option>
+                                    <option value="reserved" <?= $status_filter == 'reserved' ? 'selected' : '' ?>>محجوزة</option>
+                                    <option value="maintenance" <?= $status_filter == 'maintenance' ? 'selected' : '' ?>>صيانة</option>
+                                </select>
+                            </div>
+
+                            <div class="flex gap-3">
+                                <button type="submit" class="px-6 py-2.5 bg-[#c9a96e] hover:bg-white text-[#12110f] rounded-xl font-black text-xs uppercase tracking-widest transition-all">
+                                    تطبيق
+                                </button>
+                                <?php if (!empty($search) || !empty($max_price) || !empty($transmission_filter) || !empty($fuel_filter) || !empty($status_filter)): ?>
+                                    <a href="manage_cars.php" class="px-6 py-2.5 bg-white/5 hover:bg-white/10 text-slate-400 rounded-xl font-black text-xs uppercase tracking-widest transition-all inline-flex items-center gap-2">
+                                        <span class="material-symbols-outlined">refresh</span>
+                                        إعادة تعيين
+                                    </a>
+                                <?php endif; ?>
+                            </div>
                         </form>
-                        <?php if (!empty($search) || !empty($max_price)): ?>
-                            <a href="manage_cars.php" class="text-[10px] font-black text-[#c9a96e] hover:text-white uppercase tracking-[0.2em] flex items-center gap-2 transition-colors">
-                                <span class="material-symbols-outlined text-sm">restart_alt</span>
-                                إعادة تعيين البحث
-                            </a>
-                        <?php endif; ?>
                     </div>
 
                     <!-- Add Car Form (Full Width) -->
-                    <div class="glass-card p-10 rounded-[3rem] border border-white/5 relative overflow-hidden group">
-                        <div class="absolute -right-20 -top-20 w-80 h-80 bg-[#c9a96e]/5 blur-[100px] rounded-full opacity-50 group-hover:opacity-100 transition-opacity duration-1000"></div>
-                        
-                        <div class="flex flex-col xl:flex-row items-start xl:items-center gap-8 relative z-10">
-                            <div class="flex-shrink-0">
-                                <div class="w-16 h-16 rounded-2xl bg-[#c9a96e]/10 flex items-center justify-center text-[#c9a96e] mb-2">
-                                    <span class="material-symbols-outlined text-3xl">add_box</span>
-                                </div>
-                                <h3 class="font-black text-xl text-white">إضافة سيارة</h3>
-                                <p class="text-slate-500 text-[10px] uppercase font-bold tracking-widest mt-1">توسيع الأسطول الملكي</p>
-                            </div>
+                    <div class="glass-card rounded-[2.5rem] border border-white/5 overflow-hidden group relative">
+                        <!-- Decorative glow -->
+                        <div class="absolute -right-20 -top-20 w-80 h-80 bg-[#c9a96e]/5 blur-[100px] rounded-full opacity-40 group-hover:opacity-80 transition-opacity duration-1000 pointer-events-none"></div>
+                        <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-purple-500/3 blur-[80px] rounded-full opacity-30 pointer-events-none"></div>
 
-                            <form method="POST" enctype="multipart/form-data" class="flex-1 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6 items-end">
-                                <input type="hidden" name="add_car" value="1">
-                                
+                        <!-- Header -->
+                        <div class="flex items-center gap-5 px-10 py-7 border-b border-white/5 bg-white/[0.015]">
+                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#c9a96e]/20 to-[#c9a96e]/5 flex items-center justify-center text-[#c9a96e] flex-shrink-0 border border-[#c9a96e]/20">
+                                <span class="material-symbols-outlined text-2xl">directions_car</span>
+                            </div>
+                            <div>
+                                <h3 class="font-black text-lg text-white tracking-tight">إضافة سيارة جديدة</h3>
+                                <p class="text-slate-500 text-[10px] uppercase font-bold tracking-[0.2em] mt-0.5">توسيع الأسطول الملكي</p>
+                            </div>
+                            <div class="mr-auto flex items-center gap-2 text-[10px] text-slate-600 font-bold uppercase tracking-widest">
+                                <span class="material-symbols-outlined text-sm text-[#c9a96e]/50">auto_awesome</span>
+                                Auto Line Fleet
+                            </div>
+                        </div>
+
+                        <!-- Form Body -->
+                        <form method="POST" enctype="multipart/form-data" class="p-10 relative z-10">
+                            <input type="hidden" name="add_car" value="1">
+
+                            <!-- Main Fields Grid -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5 mb-6">
                                 <div class="space-y-2">
-                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest mr-1">الماركة</label>
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">الماركة</label>
                                     <input type="text" name="brand" placeholder="BMW" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-slate-100 focus:outline-none"/>
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest mr-1">الموديل</label>
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">الموديل</label>
                                     <input type="text" name="model" placeholder="M8 Competition" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-slate-100 focus:outline-none"/>
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest mr-1">السعر اليومي ($)</label>
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">السعر اليومي (ج.م)</label>
                                     <input type="number" name="price" placeholder="450" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-[#c9a96e] font-black focus:outline-none"/>
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest mr-1">الوقود</label>
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">نوع الوقود</label>
                                     <input type="text" name="fuel_type" placeholder="بنزين 98" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-slate-100 focus:outline-none"/>
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest mr-1">المقاعد</label>
-                                    <input type="number" name="seats" placeholder="5" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-slate-100 focus:outline-none"/>
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">المقاعد</label>
+                                    <input type="number" name="seats" placeholder="5" min="1" max="20" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-slate-100 focus:outline-none"/>
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest mr-1">ناقل الحركة</label>
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">ناقل الحركة</label>
                                     <select name="transmission" class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-slate-100 focus:outline-none appearance-none cursor-pointer">
-                                        <option value="Automatic">أوتوماتيك</option>
+                                        <option value="Auto">أوتوماتيك</option>
                                         <option value="Manual">يدوي</option>
                                     </select>
                                 </div>
-                                
-                                <button type="submit" class="bg-gradient-to-r from-[#c9a96e] to-[#e1c48f] text-[#12110f] py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] hover:shadow-[0_10px_30px_-10px_rgba(201,169,110,0.4)] transition-all flex items-center justify-center gap-2 hover:-translate-y-0.5 active:scale-95">
-                                    <span class="material-symbols-outlined text-lg">hotel_class</span>
-                                    إدراج السيارة
-                                </button>
-
-                                <!-- File Uploads (Hidden but functional or more compact) -->
-                                <div class="md:col-span-2 lg:col-span-4 xl:col-span-6 flex flex-wrap gap-4 mt-2">
-                                    <div class="flex-1 min-w-[200px] relative">
-                                        <input type="file" name="image_file" id="main_image" class="hidden" required/>
-                                        <label for="main_image" class="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white/[0.03] border border-dashed border-white/10 rounded-xl cursor-pointer hover:bg-white/[0.05] transition-all text-[10px] font-bold text-slate-400">
-                                            <span class="material-symbols-outlined text-sm">upload_file</span>
-                                            الصورة الأساسية (مطلوب)
-                                        </label>
-                                    </div>
-                                    <div class="flex-1 min-w-[200px] relative">
-                                        <input type="file" name="additional_images[]" id="gallery_images" multiple class="hidden"/>
-                                        <label for="gallery_images" class="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white/[0.03] border border-dashed border-white/10 rounded-xl cursor-pointer hover:bg-white/[0.05] transition-all text-[10px] font-bold text-slate-400">
-                                            <span class="material-symbols-outlined text-sm">add_photo_alternate</span>
-                                            صور المعرض (اختياري)
-                                        </label>
-                                    </div>
-                                    <div class="flex-[2] min-w-[300px]">
-                                        <input type="text" name="image_url" placeholder="أو أضف رابط الصورة مباشرة..." class="w-full bg-[#12110f]/40 border border-white/5 rounded-xl px-5 py-3 text-[10px] text-slate-400 focus:outline-none focus:border-[#c9a96e]/30"/>
-                                    </div>
+                                <div class="space-y-2">
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">الخصم (%)</label>
+                                    <input type="number" name="discount" placeholder="0" min="0" max="100" class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-emerald-500 font-bold focus:outline-none"/>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+
+                            <!-- Upload Section -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                <!-- Main Image Upload -->
+                                <div>
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2">الصورة الأساسية <span class="text-red-400">*</span></label>
+                                    <input type="file" name="image_file" id="main_image" class="hidden" onchange="updateFileLabel(this, 'main-file-label')"/>
+                                    <label for="main_image" id="main-file-label" class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white/[0.03] border-2 border-dashed border-white/10 rounded-2xl cursor-pointer hover:bg-[#c9a96e]/5 hover:border-[#c9a96e]/30 transition-all text-[10px] font-bold text-slate-400 group/upload">
+                                        <span class="material-symbols-outlined text-lg text-slate-500 group-hover/upload:text-[#c9a96e] transition-colors">cloud_upload</span>
+                                        <span class="truncate">اختر الصورة الرئيسية</span>
+                                    </label>
+                                </div>
+
+                                <!-- Gallery Images Upload -->
+                                <div>
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2">صور المعرض <span class="text-slate-600">(اختياري)</span></label>
+                                    <input type="file" name="additional_images[]" id="gallery_images" multiple class="hidden" onchange="updateFileLabel(this, 'gallery-file-label')"/>
+                                    <label for="gallery_images" id="gallery-file-label" class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white/[0.03] border-2 border-dashed border-white/10 rounded-2xl cursor-pointer hover:bg-purple-500/5 hover:border-purple-500/30 transition-all text-[10px] font-bold text-slate-400 group/upload">
+                                        <span class="material-symbols-outlined text-lg text-slate-500 group-hover/upload:text-purple-400 transition-colors">photo_library</span>
+                                        <span class="truncate">صور إضافية متعددة</span>
+                                    </label>
+                                </div>
+
+                                <!-- URL Input -->
+                                <div>
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2">أو رابط الصورة</label>
+                                    <input type="text" name="image_url" placeholder="https://..." class="w-full bg-[#12110f]/40 border-2 border-white/5 rounded-2xl px-5 py-4 text-[11px] text-slate-400 focus:outline-none focus:border-[#c9a96e]/30 transition-all hover:border-white/10"/>
+                                </div>
+                            </div>
+
+                            <!-- Submit -->
+                            <div class="flex justify-end">
+                                <button type="submit" class="inline-flex items-center gap-3 bg-gradient-to-r from-[#c9a96e] to-[#e1c48f] text-[#12110f] px-10 py-4 rounded-2xl font-black text-[11px] uppercase tracking-[0.25em] hover:shadow-[0_15px_40px_-10px_rgba(201,169,110,0.5)] transition-all hover:-translate-y-0.5 active:scale-95">
+                                    <span class="material-symbols-outlined text-lg">hotel_class</span>
+                                    إضافة إلى الأسطول
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
                     <!-- Car List (Full Width Grid) -->
                     <div class="flex flex-col gap-8">
+                        <!-- Counter and Status -->
+                        <div class="glass-card px-8 py-5 rounded-[2rem] border border-white/5 flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-[#c9a96e]/10 flex items-center justify-center text-[#c9a96e]">
+                                    <span class="material-symbols-outlined text-xl">segment</span>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">تحليل العرض</p>
+                                    <p class="text-sm font-black text-white">
+                                        يتم عرض <span class="text-[#c9a96e] mx-1"><?= $displayed_cars ?></span> من أصل <span class="text-[#c9a96e]/60 mx-1"><?= $stats['total_cars'] ?></span> سيارة فاخرة
+                                    </p>
+                                </div>
+                            </div>
+                            <?php if (empty($cars) && !empty($search)): ?>
+                                <div class="flex items-center gap-2 text-red-400/80">
+                                    <span class="material-symbols-outlined text-sm">search_off</span>
+                                    <p class="text-[10px] font-bold uppercase tracking-widest">لا توجد نتائج مطابقة لبحثك</p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
                         <?php if (empty($cars)): ?>
                             <div class="glass-card p-24 rounded-[4rem] text-center border-dashed border-2 border-white/5">
                                 <div class="w-24 h-24 rounded-[3rem] bg-white/[0.02] flex items-center justify-center mx-auto mb-8">
@@ -291,7 +455,7 @@ $cars = $stmt->fetchAll();
                             </div>
                         <?php endif; ?>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                             <?php foreach ($cars as $car): ?>
                             <div class="glass-card rounded-[3.5rem] overflow-hidden group hover:border-[#c9a96e]/40 transition-all duration-700 flex flex-col h-full hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] relative">
                                 <!-- Premium Watermark -->
@@ -342,7 +506,7 @@ $cars = $stmt->fetchAll();
                                         <div class="space-y-1">
                                             <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">الاستثمار اليومي</span>
                                             <div class="flex items-baseline gap-1">
-                                                <span class="text-3xl font-black text-white">$<?= number_format($car['price_per_day']) ?></span>
+                                                <span class="text-3xl font-black text-white"><?= number_format($car['price_per_day']) ?> ج.م</span>
                                                 <span class="text-[10px] font-black text-[#c9a96e] uppercase italic">صافي</span>
                                             </div>
                                         </div>
@@ -354,7 +518,7 @@ $cars = $stmt->fetchAll();
                                     <div class="grid grid-cols-3 gap-6 mb-10">
                                         <div class="flex flex-col items-center gap-3 p-4 rounded-3xl bg-white/[0.02] border border-white/5 group-hover:bg-white/[0.05] transition-all duration-500">
                                             <span class="material-symbols-outlined text-slate-600 text-xl group-hover:text-[#c9a96e]">settings_input_component</span>
-                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter group-hover:text-white"><?= $car['transmission'] == 'Automatic' ? 'أوتو' : 'يدوي' ?></span>
+                                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter group-hover:text-white"><?= $car['transmission'] == 'Auto' ? 'أوتو' : 'يدوي' ?></span>
                                         </div>
                                         <div class="flex flex-col items-center gap-3 p-4 rounded-3xl bg-white/[0.02] border border-white/5 group-hover:bg-white/[0.05] transition-all duration-500">
                                             <span class="material-symbols-outlined text-slate-600 text-xl group-hover:text-[#c9a96e]">airline_seat_recline_extra</span>
@@ -387,5 +551,64 @@ $cars = $stmt->fetchAll();
             </div>
         </main>
     </div>
+
+    <script>
+
+
+        // ── Live Search ──────────────────────────────────────────────────
+        (function () {
+            const searchInput  = document.getElementById('liveSearch');
+            const clearBtn     = document.getElementById('liveSearchClear');
+            const searchHidden = document.getElementById('searchHidden');
+            const filtersForm  = document.getElementById('filtersForm');
+            let debounceTimer  = null;
+
+            if (!searchInput) return;
+
+            // Toggle clear button visibility
+            function toggleClear() {
+                clearBtn.classList.toggle('hidden', searchInput.value.trim() === '');
+            }
+
+            searchInput.addEventListener('input', function () {
+                toggleClear();
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    searchHidden.value = searchInput.value.trim();
+                    filtersForm.submit();
+                }, 400); // 400ms debounce
+            });
+
+            // Initialise clear button state on load
+            toggleClear();
+        })();
+
+        function clearLiveSearch() {
+            const searchInput  = document.getElementById('liveSearch');
+            const searchHidden = document.getElementById('searchHidden');
+            const filtersForm  = document.getElementById('filtersForm');
+            searchInput.value  = '';
+            searchHidden.value = '';
+            document.getElementById('liveSearchClear').classList.add('hidden');
+            filtersForm.submit();
+        }
+
+        // Update file label with filename
+        function updateFileLabel(input, labelId) {
+            const label = document.getElementById(labelId);
+            if (input.files && input.files.length > 0) {
+                const count = input.files.length;
+                const text  = count === 1 ? input.files[0].name : `${count} صور مختارة`;
+                label.innerHTML = `<span class="material-symbols-outlined text-sm">check_circle</span><span class="truncate">${text}</span>`;
+                label.classList.add('text-emerald-500', 'border-emerald-500/30', 'bg-emerald-500/5');
+                label.classList.remove('text-slate-400', 'border-white/10', 'bg-white/[0.03]', 'border-dashed');
+            }
+        }
+
+        // Auto-close alerts after 5 seconds
+        document.querySelectorAll('[role="alert"]').forEach(alert => {
+            setTimeout(() => { alert.style.display = 'none'; }, 5000);
+        });
+    </script>
 </body>
 </html>

@@ -92,7 +92,7 @@ $bookings = $stmt->fetchAll();
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>إدارة الحجوزات | أوتو لوكس</title>
+    <title>إدارة الحجوزات | أوتو لاين</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
@@ -118,6 +118,29 @@ $bookings = $stmt->fetchAll();
 
         <main class="flex-1 overflow-y-auto p-8 lg:p-12">
             <div class="animate-fade-up max-w-[1600px] mx-auto">
+                
+                <!-- Success Message -->
+                <?php if (!empty($success_msg)): ?>
+                <div class="mb-8 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-3 animate-fade-up">
+                    <span class="material-symbols-outlined text-emerald-500">check_circle</span>
+                    <p class="text-emerald-500 font-bold"><?= htmlspecialchars($success_msg) ?></p>
+                    <button onclick="this.parentElement.style.display='none'" class="mr-auto text-emerald-500 hover:text-emerald-400">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <?php endif; ?>
+
+                <!-- Error Message -->
+                <?php if (!empty($error_msg)): ?>
+                <div class="mb-8 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center gap-3 animate-fade-up">
+                    <span class="material-symbols-outlined text-red-500">error</span>
+                    <p class="text-red-500 font-bold"><?= htmlspecialchars($error_msg) ?></p>
+                    <button onclick="this.parentElement.style.display='none'" class="mr-auto text-red-500 hover:text-red-400">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <?php endif; ?>
+
                 <header class="mb-12 flex items-center gap-6">
                     <!-- Mobile Toggle -->
                     <button onclick="toggleSidebar()" class="lg:hidden w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-slate-400 hover:text-white transition-all">
@@ -149,13 +172,28 @@ $bookings = $stmt->fetchAll();
                         <div class="flex gap-3">
                             <button type="submit" class="bg-[#c9a96e] hover:bg-white text-[#12110f] px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all">تطبيق</button>
                             <?php if (!empty($status_filter) || !empty($date_filter)): ?>
-                                <a href="manage_bookings.php" class="bg-white/5 hover:bg-white/10 text-slate-400 px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all inline-flex items-center">إعادة ضبط</a>
+                                <a href="manage_bookings.php" class="bg-white/5 hover:bg-white/10 text-slate-400 px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all inline-flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-lg">refresh</span>
+                                    إعادة ضبط
+                                </a>
                             <?php endif; ?>
                         </div>
                     </form>
                 </div>
 
                 <div class="glass-card rounded-[3rem] overflow-hidden border border-white/5 shadow-2xl">
+                    <div class="p-8 border-b border-white/5 flex justify-between items-center">
+                        <div>
+                            <h3 class="text-2xl font-black text-white">قائمة الحجوزات</h3>
+                            <p class="text-slate-500 text-xs mt-1 font-bold uppercase tracking-widest">
+                                عدد الحجوزات: <span class="text-[#c9a96e]"><?= count($bookings) ?></span>
+                            </p>
+                        </div>
+                        <a href="../booking_flow.html" class="px-6 py-3 rounded-xl bg-[#c9a96e] hover:bg-white text-[#12110f] font-black text-xs uppercase tracking-widest transition-all inline-flex items-center gap-2">
+                            <span class="material-symbols-outlined">add</span>
+                            حجز جديد
+                        </a>
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-right border-collapse">
                             <thead>
@@ -208,7 +246,7 @@ $bookings = $stmt->fetchAll();
                                         </div>
                                     </td>
                                     <td class="px-10 py-8 font-black text-xl text-[#c9a96e]">
-                                        $<?= number_format($b['total_price']) ?>
+                                        <?= number_format($b['total_price']) ?> ج.م
                                     </td>
                                     <td class="px-10 py-8">
                                         <?php
@@ -225,28 +263,34 @@ $bookings = $stmt->fetchAll();
                                         </span>
                                     </td>
                                     <td class="px-10 py-8 text-left">
-                                        <form method="POST" class="inline-flex gap-2">
-                                            <input type="hidden" name="booking_id" value="<?= $b['id'] ?>">
-                                            <input type="hidden" name="update_status" value="1">
+                                        <div class="flex gap-2 items-center">
+                                            <a href="booking_details.php?id=<?= $b['id'] ?>" class="w-10 h-10 rounded-xl bg-[#c9a96e]/10 text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#12110f] transition-all flex items-center justify-center border border-[#c9a96e]/20" title="عرض التفاصيل">
+                                                <span class="material-symbols-outlined text-lg">open_in_new</span>
+                                            </a>
                                             
-                                            <?php if ($b['status'] == 'pending'): ?>
-                                                <button name="new_status" value="confirmed" class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition-all flex items-center justify-center border border-blue-500/20" title="تأكيد">
-                                                    <span class="material-symbols-outlined text-lg">check_circle</span>
-                                                </button>
-                                            <?php endif; ?>
+                                            <form method="POST" class="inline-flex gap-2">
+                                                <input type="hidden" name="booking_id" value="<?= $b['id'] ?>">
+                                                <input type="hidden" name="update_status" value="1">
+                                                
+                                                <?php if ($b['status'] == 'pending'): ?>
+                                                    <button name="new_status" value="confirmed" class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition-all flex items-center justify-center border border-blue-500/20" title="تأكيد">
+                                                        <span class="material-symbols-outlined text-lg">check_circle</span>
+                                                    </button>
+                                                <?php endif; ?>
 
-                                            <?php if ($b['status'] == 'confirmed'): ?>
-                                                <button name="new_status" value="completed" class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all flex items-center justify-center border border-emerald-500/20" title="اكتمال">
-                                                    <span class="material-symbols-outlined text-lg">done_all</span>
-                                                </button>
-                                            <?php endif; ?>
+                                                <?php if ($b['status'] == 'confirmed'): ?>
+                                                    <button name="new_status" value="completed" class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all flex items-center justify-center border border-emerald-500/20" title="اكتمال">
+                                                        <span class="material-symbols-outlined text-lg">done_all</span>
+                                                    </button>
+                                                <?php endif; ?>
 
-                                            <?php if ($b['status'] != 'cancelled' && $b['status'] != 'completed'): ?>
-                                                <button name="new_status" value="cancelled" class="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center border border-red-500/20" title="إلغاء">
-                                                    <span class="material-symbols-outlined text-lg">close</span>
-                                                </button>
-                                            <?php endif; ?>
-                                        </form>
+                                                <?php if ($b['status'] != 'cancelled' && $b['status'] != 'completed'): ?>
+                                                    <button name="new_status" value="cancelled" class="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center border border-red-500/20" title="إلغاء">
+                                                        <span class="material-symbols-outlined text-lg">close</span>
+                                                    </button>
+                                                <?php endif; ?>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>

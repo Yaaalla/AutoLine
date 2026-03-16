@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 
 session_start();
 if (!isset($_SESSION['admin_id'])) { header("Location: login.php"); exit; }
+if (($_SESSION['admin_role'] ?? 'admin') !== 'admin') { header("Location: dashboard.php"); exit; }
 require_once '../config/db_connect.php';
 require_once '../includes/functions.php';
 
@@ -17,8 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_admin'])) {
         $username = $_POST['username'];
         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
         
-        $stmt = $pdo->prepare("INSERT INTO admins (username, password) VALUES (?, ?)");
-        $stmt->execute([$username, $password]);
+        $role = $_POST['role'] ?? 'manager';
+        
+        $stmt = $pdo->prepare("INSERT INTO admins (username, password, role) VALUES (?, ?, ?)");
+        $stmt->execute([$username, $password, $role]);
         
         log_activity($pdo, $admin_id, "Added Admin", "Created new admin account: $username");
         
@@ -65,7 +68,7 @@ $admins = $pdo->query("SELECT * FROM admins ORDER BY created_at DESC")->fetchAll
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>إدارة المسؤولين | أوتو لوكس</title>
+    <title>إدارة المسؤولين | أوتو لاين</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
@@ -140,6 +143,7 @@ $admins = $pdo->query("SELECT * FROM admins ORDER BY created_at DESC")->fetchAll
                                         <tr class="bg-white/[0.02]">
                                             <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">اسم المستخدم</th>
                                             <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">تاريخ البدء</th>
+                                            <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">الدور</th>
                                             <th class="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 text-left">إجراءات</th>
                                         </tr>
                                     </thead>
@@ -166,6 +170,11 @@ $admins = $pdo->query("SELECT * FROM admins ORDER BY created_at DESC")->fetchAll
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
+                                            </td>
+                                            <td class="px-10 py-8">
+                                                <span class="px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest <?= $a['role'] === 'admin' ? 'bg-primary/20 text-primary' : 'bg-white/5 text-slate-400' ?>">
+                                                    <?= $a['role'] === 'admin' ? 'مسؤول (Admin)' : 'مدير (Manager)' ?>
+                                                </span>
                                             </td>
                                             <td class="px-10 py-8 text-xs font-bold text-slate-400 capitalize">
                                                 <?= date('d M, Y', strtotime($a['created_at'])) ?>
@@ -211,6 +220,14 @@ $admins = $pdo->query("SELECT * FROM admins ORDER BY created_at DESC")->fetchAll
                                 <div class="space-y-2">
                                     <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 mr-1">كلمة المرور</label>
                                     <input type="password" name="password" placeholder="••••••••" required class="w-full input-premium rounded-2xl px-5 py-4 text-sm text-slate-100 focus:outline-none"/>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 mr-1">الصلاحية (الدور)</label>
+                                    <select name="role" required class="w-full input-premium rounded-2xl px-5 py-4 text-sm text-slate-100 focus:outline-none appearance-none bg-no-repeat bg-[right_1.25rem_center]">
+                                        <option value="manager" selected>مدير (مدونة وحجوزات فقط)</option>
+                                        <option value="admin">مسؤول (صلاحيات كاملة)</option>
+                                    </select>
                                 </div>
 
                                 <button type="submit" class="w-full bg-gradient-to-r from-[#c9a96e] to-[#e1c48f] text-[#12110f] py-5 rounded-[1.5rem] font-black text-xs uppercase tracking-[0.2em] hover:shadow-[0_10px_30px_-10px_rgba(201,169,110,0.4)] transition-all flex items-center justify-center gap-3 mt-4">

@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($authenticated) {
             $_SESSION['admin_id'] = $admin['id'];
+            $_SESSION['admin_role'] = $admin['role'] ?? 'admin';
             header("Location: dashboard.php");
             exit;
         } else {
@@ -40,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>أوتو لوكس | تسجيل الدخول</title>
+    <title>اوتو لاين | تسجيل الدخول</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
@@ -73,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="w-20 h-20 bg-gradient-to-tr from-[#c9a96e] to-[#e1c48f] rounded-[2rem] mx-auto mb-6 flex items-center justify-center shadow-[0_10px_30px_-5px_rgba(201,169,110,0.4)]">
                 <span class="material-symbols-outlined text-[#12110f] text-4xl">key</span>
             </div>
-            <h1 class="text-4xl font-black text-white tracking-tight mb-2">أوتو لوكس</h1>
+            <h1 class="text-4xl font-black text-white tracking-tight mb-2">اوتو لاين</h1>
             <p class="text-slate-500 text-xs font-bold uppercase tracking-[0.4em]">بوابة الإدارة الحصرية</p>
         </div>
         
@@ -109,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="mt-12 text-center">
             <p class="text-[9px] text-slate-600 font-bold uppercase tracking-[0.4em] leading-relaxed">
-                جميع الحقوق محفوظة &copy; <?= date('Y') ?> أوتو لوكس للسيارات الفاخرة
+                جميع الحقوق محفوظة &copy; <?= date('Y') ?> اوتو لاين لتاجير السيارات
             </p>
         </div>
     </div>

@@ -44,14 +44,20 @@ $cars = $stmt->fetchAll();
                                 <h3 class="text-xl font-bold"><?= htmlspecialchars($car['model']) ?></h3>
                             </div>
                             <div class="text-right">
-                                <p class="text-lg font-black text-primary">$<?= number_format($car['price_per_day']) ?></p>
+                                <?php if (isset($car['discount']) && $car['discount'] > 0): ?>
+                                    <?php $discounted_price = $car['price_per_day'] * (1 - ($car['discount'] / 100)); ?>
+                                    <p class="text-xs font-bold text-slate-500 line-through"><?= number_format($car['price_per_day']) ?> ج.م</p>
+                                    <p class="text-lg font-black text-primary"><?= number_format($discounted_price) ?> ج.م</p>
+                                <?php else: ?>
+                                    <p class="text-lg font-black text-primary"><?= number_format($car['price_per_day']) ?> ج.م</p>
+                                <?php endif; ?>
                                 <p class="text-[10px] font-bold text-slate-500">لكل يوم</p>
                             </div>
                         </div>
                         <div class="my-4 grid grid-cols-3 gap-4 border-y border-primary/5 py-4">
                             <div class="flex flex-col items-center gap-1 text-center">
                                 <span class="material-symbols-outlined text-primary/60 text-lg">settings</span>
-                                <span class="text-[8px] font-bold uppercase text-slate-500"><?= $car['transmission'] == 'Automatic' ? 'أوتوماتيك' : 'يدوي' ?></span>
+                                <span class="text-[8px] font-bold uppercase text-slate-500"><?= $car['transmission'] == 'Auto' ? 'أوتوماتيك' : 'يدوي' ?></span>
                             </div>
                             <div class="flex flex-col items-center gap-1 text-center">
                                 <span class="material-symbols-outlined text-primary/60 text-lg">local_gas_station</span>
