@@ -120,7 +120,7 @@ function sendBookingEmail($to, $booking_data, $car_data) {
                     <h3>🏎️ تفاصيل السيارة</h3>
                     <div class='info-row'>
                         <span class='label'>النوع:</span>
-                        <span class='value'>" . htmlspecialchars($car_data['brand'] . ' ' . $car_data['model']) . "</span>
+                        <span class='value'>" . htmlspecialchars($car_data['brand']) . ' ' . htmlspecialchars($car_data['model']) . "</span>
                     </div>
                     <div class='info-row'>
                         <span class='label'>ناقل الحركة:</span>
@@ -237,7 +237,7 @@ function sendAdminNotification($booking_data, $car_data) {
                 
                 <div class="admin-section">
                     <h3>🏎️ السيارة المطلوبة</h3>
-                    <div class="admin-row"><strong>النوع:</strong> ' . htmlspecialchars($car_data['brand'] . ' ' . $car_data['model']) . '</div>
+                    <div class="admin-row"><strong>النوع:</strong> ' . htmlspecialchars($car_data['brand']) . ' ' . htmlspecialchars($car_data['model']) . '</div>
                 </div>
                 
                 <div class="admin-section">
@@ -266,6 +266,107 @@ function sendAdminNotification($booking_data, $car_data) {
     $headers .= "From: " . FROM_NAME . " <" . FROM_EMAIL . ">\r\n";
     
     return mail(ADMIN_EMAIL, $subject, $message, $headers);
+}
+
+/**
+ * CSRF Protection Helpers
+ */
+function get_csrf_token() {
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+function validate_csrf_token($token) {
+    return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+}
+
+/**
+ * Secure File Upload Helper
+ */
+function handle_secure_upload($file_array, $upload_dir, $prefix = 'file_') {
+    if (!isset($file_array) || $file_array['error'] !== UPLOAD_ERR_OK) {
+        return ['success' => false, 'error' => 'No file uploaded or upload error.'];
+    }
+
+    $allowed_types = ['image/jpeg', 'image/png', 'image/webp'];
+    $max_size = 10 * 1024 * 1024; // 10MB
+
+    // 1. Check size
+    if ($file_array['size'] > $max_size) {
+        return ['success' => false, 'error' => 'File size exceeds 5MB limit.'];
+    }
+
+    // 2. Validate MIME type using finfo
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mime_type = $finfo->file($file_array['tmp_name']);
+    if (!in_array($mime_type, $allowed_types)) {
+        return ['success' => false, 'error' => 'Invalid file type. Only JPG, PNG, and WebP are allowed.'];
+    }
+
+    // 3. Ensure upload directory exists
+    if (!is_dir($upload_dir)) {
+        mkdir($upload_dir, 0755, true);
+    }
+
+    // 4. Generate random filename
+    $extension = pathinfo($file_array['name'], PATHINFO_EXTENSION);
+    $new_filename = uniqid($prefix, true) . '.' . $extension;
+    $target_path = $upload_dir . $new_filename;
+
+    // 5. Move file
+    if (move_uploaded_file($file_array['tmp_name'], $target_path)) {
+        return ['success' => true, 'path' => $new_filename];
+    }
+
+    return ['success' => false, 'error' => 'Failed to move uploaded file.'];
+}
+
+/**
+ * Check if a car is available for a given period
+ */
+function is_car_available($pdo, $car_id, $pickup_date, $return_date, $exclude_booking_id = null) {
+    $query = "SELECT COUNT(*) FROM bookings 
+              WHERE car_id = ? 
+              AND status IN ('confirmed', 'pending') 
+              AND (
+                  (pickup_date BETWEEN ? AND ?) OR 
+                  (return_date BETWEEN ? AND ?) OR 
+                  (? BETWEEN pickup_date AND return_date)
+              )";
+    
+    $params = [$car_id, $pickup_date, $return_date, $pickup_date, $return_date, $pickup_date];
+    
+    if ($exclude_booking_id) {
+        $query .= " AND id != ?";
+        $params[] = $exclude_booking_id;
+    }
+    
+    $stmt = $pdo->prepare($query);
+    $stmt->execute($params);
+    return $stmt->fetchColumn() == 0;
+}
+
+/**
+ * Update car and booking status based on current time
+ */
+function update_expired_bookings($pdo) {
+    $now = date('Y-m-d H:i:s');
+    
+    // 1. Mark completed bookings
+    $stmt = $pdo->prepare("UPDATE bookings SET status = 'completed' WHERE status = 'confirmed' AND return_date < ?");
+    $stmt->execute([$now]);
+    
+    // 2. Identify cars that should be available again
+    // Logic: Car is available if it has NO confirmed/pending bookings at this moment
+    $pdo->query("UPDATE cars SET status = 'available' WHERE status = 'reserved'");
+    
+    $pdo->query("UPDATE cars c 
+                 INNER JOIN bookings b ON c.id = b.car_id 
+                 SET c.status = 'reserved' 
+                 WHERE b.status IN ('confirmed', 'pending') 
+                 AND NOW() BETWEEN b.pickup_date AND b.return_date");
 }
 ?>
 

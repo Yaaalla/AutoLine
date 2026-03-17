@@ -57,7 +57,10 @@ $other_cars = $other_stmt->fetchAll();
                     <span class="text-primary"><?= htmlspecialchars($car['brand']) ?></span>
                 </nav>
 
-                <h2 class="text-5xl font-black uppercase tracking-tight mb-2"><?= htmlspecialchars($car['brand'] . ' ' . $car['model']) ?></h2>
+                <h2 class="text-5xl font-black uppercase tracking-tight mb-2">
+                    <?= htmlspecialchars($car['brand'] . ' ' . $car['model']) ?>
+                    <span class="text-primary text-3xl ml-3"><?= $car['model_year'] ?></span>
+                </h2>
                 <div class="flex items-center gap-4 mb-8">
                     <div class="flex items-center gap-1 text-primary">
                         <span class="material-symbols-outlined text-sm">star</span>
@@ -72,9 +75,9 @@ $other_cars = $other_stmt->fetchAll();
                     <?php endif; ?>
                 </div>
 
-                <div class="grid grid-cols-2 lg:grid-cols-3 gap-6 mb-10 py-8 border-y border-slate-200 dark:border-primary/5">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10 py-8 border-y border-slate-200 dark:border-primary/5">
                     <div class="text-center group">
-                        <span class="material-symbols-outlined text-primary text-3xl mb-2 group-hover:scale-110 transition-transform">settings</span>
+                        <span class="material-symbols-outlined text-primary text-3xl mb-2 group-hover:scale-110 transition-transform">settings_input_component</span>
                         <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">ناقل الحركة</p>
                         <p class="text-xs font-black uppercase"><?= $car['transmission'] == 'Auto' ? 'أوتوماتيك' : 'يدوي' ?></p>
                     </div>
@@ -86,7 +89,7 @@ $other_cars = $other_stmt->fetchAll();
                     <div class="text-center group">
                         <span class="material-symbols-outlined text-primary text-3xl mb-2 group-hover:scale-110 transition-transform">local_gas_station</span>
                         <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">الوقود</p>
-                        <p class="text-xs font-black uppercase"><?= $car['fuel_type'] == 'Petrol' ? 'بنزين' : ($car['fuel_type'] == 'Diesel' ? 'ديزل' : $car['fuel_type']) ?></p>
+                        <p class="text-xs font-black uppercase"><?= $car['fuel_type'] ?></p>
                     </div>
                     <div class="text-center group">
                         <span class="material-symbols-outlined text-primary text-3xl mb-2 group-hover:scale-110 transition-transform">speed</span>
@@ -105,8 +108,13 @@ $other_cars = $other_stmt->fetchAll();
                     </div>
                     <div class="text-center group">
                         <span class="material-symbols-outlined text-primary text-3xl mb-2 group-hover:scale-110 transition-transform">palette</span>
-                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">اللون</p>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">اللون الخارجي</p>
                         <p class="text-xs font-black uppercase"><?= htmlspecialchars($car['color'] ?? '-') ?></p>
+                    </div>
+                    <div class="text-center group">
+                        <span class="material-symbols-outlined text-primary text-3xl mb-2 group-hover:scale-110 transition-transform">calendar_today</span>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">سنة الصنع</p>
+                        <p class="text-xs font-black uppercase"><?= htmlspecialchars($car['model_year'] ?? '-') ?></p>
                     </div>
                 </div>
 
@@ -124,10 +132,18 @@ $other_cars = $other_stmt->fetchAll();
                             <?php endif; ?>
                         </div>
                     </div>
-                    <a href="booking_flow.php?car_id=<?= $car['id'] ?>" class="w-full bg-primary hover:bg-primary/90 text-background-dark py-4 rounded-xl font-black uppercase tracking-widest transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 mt-4 text-center">
-                        احجز هذه السيارة
-                        <span class="material-symbols-outlined rotate-180">arrow_forward</span>
-                    </a>
+                    <?php if ($car['status'] == 'reserved'): ?>
+                        <div class="w-full bg-slate-200 dark:bg-white/5 text-slate-500 py-4 rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-2 mt-4 cursor-not-allowed border border-slate-300 dark:border-white/10">
+                            محجوزة حالياً
+                            <span class="material-symbols-outlined">event_busy</span>
+                        </div>
+                        <p class="text-[10px] text-center mt-3 font-bold text-amber-500 uppercase tracking-widest">هذه السيارة محجوزة حالياً. يرجى المحاولة لاحقاً.</p>
+                    <?php else: ?>
+                        <a href="booking_flow.php?car_id=<?= $car['id'] ?>" class="w-full bg-primary hover:bg-primary/90 text-background-dark py-4 rounded-xl font-black uppercase tracking-widest transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 mt-4 text-center">
+                            احجز هذه السيارة
+                            <span class="material-symbols-outlined rotate-180">arrow_forward</span>
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

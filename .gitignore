@@ -1,0 +1,27 @@
+# OS junk files
+.DS_Store
+Thumbs.db
+*.swp
+
+# Error logs
+error_log
+php_errors.log
+
+# Database dumps
+*.sql
+
+# User uploads
+uploads/cars/*
+uploads/blogs/*
+!uploads/cars/.gitkeep
+!uploads/blogs/.gitkeep
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Local configuration (if you use .env files)
+.env
+config/db_local.php

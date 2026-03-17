@@ -124,18 +124,22 @@ $colors = $pdo->query("SELECT DISTINCT color FROM cars WHERE color IS NOT NULL A
                                 <p class="text-[10px] font-bold text-slate-500">لكل يوم</p>
                             </div>
                         </div>
-                        <div class="my-4 grid grid-cols-3 gap-4 border-y border-primary/5 py-4">
-                            <div class="flex flex-col items-center gap-1 text-center">
+                        <div class="my-4 grid grid-cols-2 gap-4 border-y border-primary/5 py-4">
+                            <div class="flex items-center gap-3">
                                 <span class="material-symbols-outlined text-primary/60 text-lg">settings</span>
-                                <span class="text-[8px] font-bold uppercase text-slate-500"><?= $car['transmission'] == 'Auto' ? 'أوتوماتيك' : 'يدوي' ?></span>
+                                <span class="text-[9px] font-bold uppercase text-slate-500"><?= $car['transmission'] == 'Auto' ? 'أوتو' : 'يدوي' ?></span>
                             </div>
-                            <div class="flex flex-col items-center gap-1 text-center">
+                            <div class="flex items-center gap-3">
                                 <span class="material-symbols-outlined text-primary/60 text-lg">local_gas_station</span>
-                                <span class="text-[8px] font-bold uppercase text-slate-500"><?= $car['fuel_type'] == 'Petrol' ? 'بنزين' : ($car['fuel_type'] == 'Diesel' ? 'ديزل' : $car['fuel_type']) ?></span>
+                                <span class="text-[9px] font-bold uppercase text-slate-500"><?= htmlspecialchars($car['fuel_type']) ?></span>
                             </div>
-                            <div class="flex flex-col items-center gap-1 text-center">
-                                <span class="material-symbols-outlined text-primary/60 text-lg">airline_seat_recline_extra</span>
-                                <span class="text-[8px] font-bold uppercase text-slate-500"><?= $car['seats'] ?> مقاعد</span>
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary/60 text-lg">palette</span>
+                                <span class="text-[9px] font-bold uppercase text-slate-500"><?= htmlspecialchars($car['color'] ?? '-') ?></span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary/60 text-lg">speed</span>
+                                <span class="text-[9px] font-bold uppercase text-slate-500"><?= number_format($car['mileage'] ?? 0) ?> KM</span>
                             </div>
                         </div>
                         <a href="car_details.php?id=<?= $car['id'] ?>" class="block mt-auto w-full rounded-lg bg-primary py-3.5 text-sm font-black uppercase tracking-widest text-background-dark transition-all hover:bg-primary/90 active:scale-95 text-center">

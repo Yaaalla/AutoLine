@@ -184,34 +184,6 @@ $recent_bookings = $stmt->fetchAll();
                             عرض الحجوزات →
                         </a>
                     </div>
-
-                    <!-- Total Revenue -->
-                    <div class="stat-card stat-item glass-card p-8 rounded-[2rem] transition-all duration-300">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-slate-500 text-xs font-black uppercase tracking-[0.15em] mb-2">إجمالي الإيرادات</p>
-                                <p class="text-3xl font-black text-[#c9a96e]"><?= number_format($stats['revenue'], 2) ?> ج.م</p>
-                            </div>
-                            <div class="w-20 h-20 rounded-[1.5rem] bg-gradient-to-br from-[#c9a96e]/20 to-[#c9a96e]/10 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-5xl text-[#c9a96e]">payments</span>
-                            </div>
-                        </div>
-                        <p class="text-[11px] text-slate-500 mt-4 uppercase tracking-widest">من الحجوزات المؤكدة</p>
-                    </div>
-
-                    <!-- Average Booking -->
-                    <div class="stat-card stat-item glass-card p-8 rounded-[2rem] transition-all duration-300">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-slate-500 text-xs font-black uppercase tracking-[0.15em] mb-2">متوسط الحجز</p>
-                                <p class="text-3xl font-black text-purple-500"><?= number_format($stats['avg_booking'], 2) ?> ج.م</p>
-                            </div>
-                            <div class="w-20 h-20 rounded-[1.5rem] bg-gradient-to-br from-purple-500/20 to-purple-600/10 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-5xl text-purple-500">trending_up</span>
-                            </div>
-                        </div>
-                        <p class="text-[11px] text-slate-500 mt-4 uppercase tracking-widest">قيمة الحجز المتوسطة</p>
-                    </div>
                 </div>
 
 

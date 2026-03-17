@@ -11,6 +11,16 @@ require_once '../includes/functions.php';
 $success_msg = "";
 $error_msg = "";
 
+// CSRF Validation
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (empty($_POST) && $_SERVER['CONTENT_LENGTH'] > 0) {
+        die("لقد تجاوز حجم الملفات المرفوعة الحد المسموح به على السيرفر (post_max_size). يرجى تقليل حجم الصور أو رفع عدد أقل.");
+    }
+    if (!isset($_POST['csrf_token']) || !validate_csrf_token($_POST['csrf_token'])) {
+        die("CSRF token validation failed. Please refresh the page and try again.");
+    }
+}
+
 $id = $_GET['id'] ?? null;
 if (!$id) { header("Location: manage_cars.php"); exit; }
 
@@ -56,8 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_car'])) {
         $mileage = $_POST['mileage'];
         $car_condition = $_POST['car_condition'];
         $tire_condition = $_POST['tire_condition'];
+        $model_year = (int)$_POST['model_year'];
         $status = $_POST['status'];
-        $discount = isset($_POST['discount']) ? (int)$_POST['discount'] : 0;
+        $discount = (!empty($_POST['discount'])) ? (int)$_POST['discount'] : 0;
         
         $image_path = $car['image_path'];
 
@@ -83,8 +94,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_car'])) {
             }
         }
 
-        $stmt = $pdo->prepare("UPDATE cars SET brand=?, model=?, price_per_day=?, seats=?, transmission=?, fuel_type=?, color=?, mileage=?, car_condition=?, tire_condition=?, image_path=?, status=?, discount=? WHERE id=?");
-        $stmt->execute([$brand, $model, $price, $seats, $transmission, $fuel, $color, $mileage, $car_condition, $tire_condition, $image_path, $status, $discount, $id]);
+        $stmt = $pdo->prepare("UPDATE cars SET brand=?, model=?, model_year=?, price_per_day=?, seats=?, transmission=?, fuel_type=?, color=?, mileage=?, car_condition=?, tire_condition=?, image_path=?, status=?, discount=? WHERE id=?");
+        $stmt->execute([$brand, $model, $model_year, $price, $seats, $transmission, $fuel, $color, $mileage, $car_condition, $tire_condition, $image_path, $status, $discount, $id]);
 
         // Handle New Gallery Images
         if (isset($_FILES['new_gallery'])) {
@@ -177,7 +188,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_car'])) {
                     </div>
                 <?php endif; ?>
 
-                <form method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                <form method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-12 gap-10" onsubmit="return handleFormSubmit(event)">
+                    <input type="hidden" name="csrf_token" value="<?= get_csrf_token() ?>">
                     <input type="hidden" name="update_car" value="1">
                     
                     <!-- Left Column: Primary Details -->
@@ -198,6 +210,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_car'])) {
                                 <div class="space-y-2">
                                     <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mr-1">الموديل والطراز</label>
                                     <input type="text" name="model" value="<?= htmlspecialchars($car['model']) ?>" required class="w-full input-premium rounded-2xl px-6 py-4 text-sm text-slate-100 focus:outline-none"/>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mr-1">سنة الموديل</label>
+                                    <input type="number" name="model_year" value="<?= htmlspecialchars($car['model_year'] ?? '') ?>" required class="w-full input-premium rounded-2xl px-6 py-4 text-sm text-slate-100 focus:outline-none"/>
                                 </div>
                             </div>
 
@@ -249,7 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_car'])) {
                                     </select>
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mr-1">الخصم (%)</label>
+                                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mr-1">الخصم (%) <span class="text-slate-600">(اختياري)</span></label>
                                     <input type="number" name="discount" value="<?= htmlspecialchars($car['discount'] ?? 0) ?>" min="0" max="100" class="w-full input-premium rounded-2xl px-6 py-4 text-sm text-emerald-500 font-black focus:outline-none"/>
                                 </div>
                             </div>
@@ -329,5 +345,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_car'])) {
             </div>
         </main>
     </div>
+    <script>
+        async function compressImage(file, maxWidth = 1200, quality = 0.7) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        canvas.toBlob((blob) => {
+                            resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+                        }, 'image/jpeg', quality);
+                    };
+                };
+            });
+        }
+
+        async function handleFormSubmit(event) {
+            const form = event.target;
+            const fileInputs = form.querySelectorAll('input[type="file"]');
+            let hasFiles = false;
+            
+            for (const input of fileInputs) {
+                if (input.files.length > 0) {
+                    hasFiles = true;
+                    break;
+                }
+            }
+            
+            if (hasFiles) {
+                event.preventDefault();
+                
+                const btn = form.querySelector('button[type="submit"]');
+                btn.disabled = true;
+                btn.innerHTML = '<div class="flex items-center gap-2 justify-center"><span class="material-symbols-outlined animate-spin text-sm">sync</span><span>جاري ضغط الصور...</span></div>';
+
+                for (const input of fileInputs) {
+                    if (input.files.length > 0) {
+                        const dataTransfer = new DataTransfer();
+                        for (let i = 0; i < input.files.length; i++) {
+                            const file = input.files[i];
+                            if (file.type.startsWith('image/')) {
+                                const compressed = await compressImage(file);
+                                dataTransfer.items.add(compressed);
+                            } else {
+                                dataTransfer.items.add(file);
+                            }
+                        }
+                        input.files = dataTransfer.files;
+                    }
+                }
+                
+                form.submit();
+            }
+            return true;
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+    </script>
 </body>
 </html>

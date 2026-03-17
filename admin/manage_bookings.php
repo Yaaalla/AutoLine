@@ -11,8 +11,15 @@ $success_msg = "";
 $error_msg = "";
 $admin_id = $_SESSION['admin_id'];
 
+// Auto-sync booking statuses
+update_expired_bookings($pdo);
+
 // Update Booking Status
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
+    // CSRF Validation
+    if (!isset($_POST['csrf_token']) || !validate_csrf_token($_POST['csrf_token'])) {
+        die("CSRF token validation failed. Please refresh the page and try again.");
+    }
     try {
         $booking_id = $_POST['booking_id'];
         $new_status = $_POST['new_status'];
@@ -25,14 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
         if ($booking) {
             $car_id = $booking['car_id'];
             if ($new_status === 'cancelled') {
-                $stmt = $pdo->prepare("DELETE FROM bookings WHERE id = ?");
+                $stmt = $pdo->prepare("UPDATE bookings SET status = 'cancelled' WHERE id = ?");
                 $stmt->execute([$booking_id]);
                 
                 // Reset car to available if cancelled
                 $stmt = $pdo->prepare("UPDATE cars SET status = 'available' WHERE id = ?");
                 $stmt->execute([$car_id]);
                 
-                log_activity($pdo, $admin_id, "Deleted (Cancelled) Booking", "Removed booking #$booking_id (" . $booking['customer_name'] . "). Car marked as Available.");
+                log_activity($pdo, $admin_id, "Cancelled Booking", "Marked booking #$booking_id (" . $booking['customer_name'] . ") as Cancelled. Car marked as Available.");
                 $_SESSION['success'] = "Booking cancelled and car made available.";
             } else {
                 $stmt = $pdo->prepare("UPDATE bookings SET status = ? WHERE id = ?");
@@ -65,11 +72,13 @@ if (isset($_SESSION['success'])) {
     unset($_SESSION['success']);
 }
 
-// Filtering
 $status_filter = $_GET['status'] ?? "";
 $date_filter = $_GET['date'] ?? "";
 
-$query = "SELECT b.*, c.brand, c.model, c.image_path FROM bookings b JOIN cars c ON b.car_id = c.id WHERE 1=1";
+$query = "SELECT b.*, c.brand, c.model, c.image_path 
+          FROM bookings b 
+          JOIN cars c ON b.car_id = c.id 
+          WHERE b.status IN ('pending', 'confirmed') ";
 $params = [];
 
 if (!empty($status_filter)) {
@@ -157,12 +166,11 @@ $bookings = $stmt->fetchAll();
                     <form method="GET" class="flex flex-wrap gap-6 items-end">
                         <div class="flex-1 min-w-[200px]">
                             <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 mr-1">تصفية حسب الحالة</label>
+                            <input type="hidden" name="csrf_token" value="<?= get_csrf_token() ?>">
                             <select name="status" class="w-full bg-[#12110f]/50 border border-white/5 rounded-2xl px-6 py-4 text-sm text-slate-100 focus:border-[#c9a96e]/50 focus:outline-none transition-all appearance-none cursor-pointer">
                                 <option value="">كل الحالات</option>
                                 <option value="pending" <?= $status_filter == 'pending' ? 'selected' : '' ?>>قيد الانتظار</option>
                                 <option value="confirmed" <?= $status_filter == 'confirmed' ? 'selected' : '' ?>>مؤكد</option>
-                                <option value="completed" <?= $status_filter == 'completed' ? 'selected' : '' ?>>مكتمل</option>
-                                <option value="cancelled" <?= $status_filter == 'cancelled' ? 'selected' : '' ?>>ملغي</option>
                             </select>
                         </div>
                         <div class="flex-1 min-w-[200px]">
@@ -269,6 +277,7 @@ $bookings = $stmt->fetchAll();
                                             </a>
                                             
                                             <form method="POST" class="inline-flex gap-2">
+                                                <input type="hidden" name="csrf_token" value="<?= get_csrf_token() ?>">
                                                 <input type="hidden" name="booking_id" value="<?= $b['id'] ?>">
                                                 <input type="hidden" name="update_status" value="1">
                                                 

@@ -227,12 +227,12 @@ $latest_blogs = $blog_stmt->fetchAll();
                 </div>
                 
                 <div class="p-8">
-                    <h3 class="text-slate-900 dark:text-white font-black text-2xl mb-2 text-center" dir="ltr"><?= htmlspecialchars($car['brand'] . ' ' . $car['model'] . ' ' . $car['year']) ?></h3>
+                    <h3 class="text-slate-900 dark:text-white font-black text-2xl mb-2 text-center" dir="ltr"><?= htmlspecialchars($car['brand'] . ' ' . $car['model']) ?></h3>
                     
                     <div class="flex justify-center gap-6 mb-8 pt-4 pb-8 border-b border-gray-200 dark:border-white/10">
                         <div class="flex flex-col items-center gap-2 text-slate-500 dark:text-slate-400">
                             <span class="material-symbols-outlined text-2xl text-primary">local_gas_station</span>
-                            <span class="text-sm font-bold">بنزين</span>
+                            <span class="text-sm font-bold"><?= htmlspecialchars($car['fuel_type']) ?></span>
                         </div>
                         <div class="flex flex-col items-center gap-2 text-slate-500 dark:text-slate-400">
                             <span class="material-symbols-outlined text-2xl text-primary">airline_seat_recline_extra</span>
@@ -240,7 +240,7 @@ $latest_blogs = $blog_stmt->fetchAll();
                         </div>
                         <div class="flex flex-col items-center gap-2 text-slate-500 dark:text-slate-400">
                             <span class="material-symbols-outlined text-2xl text-primary">speed</span>
-                            <span class="text-sm font-bold">130 KM</span>
+                            <span class="text-sm font-bold"><?= number_format($car['mileage'] ?? 0) ?> KM</span>
                         </div>
                         <div class="flex flex-col items-center gap-2 text-slate-500 dark:text-slate-400">
                             <span class="material-symbols-outlined text-2xl text-primary">settings</span>

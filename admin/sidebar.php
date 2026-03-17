@@ -25,7 +25,8 @@ $user_role = $_SESSION['admin_role'] ?? 'admin';
             ['id' => 'dashboard.php', 'label' => 'نظرة عامة', 'icon' => 'dashboard', 'url' => 'dashboard.php', 'roles' => ['admin']],
             ['id' => 'manage_cars.php', 'label' => 'إدارة الأسطول', 'icon' => 'directions_car', 'url' => 'manage_cars.php', 'active_on' => ['manage_cars.php', 'edit_car.php'], 'roles' => ['admin']],
             ['id' => 'manage_blogs.php', 'label' => 'إدارة المدونة', 'icon' => 'article', 'url' => 'manage_blogs.php', 'active_on' => ['manage_blogs.php', 'add_blog.php', 'edit_blog.php'], 'roles' => ['admin', 'manager']],
-            ['id' => 'manage_bookings.php', 'label' => 'الحجوزات', 'icon' => 'calendar_month', 'url' => 'manage_bookings.php', 'roles' => ['admin', 'manager']],
+            ['id' => 'manage_bookings.php', 'label' => 'الحجوزات الحالية', 'icon' => 'calendar_month', 'url' => 'manage_bookings.php', 'roles' => ['admin', 'manager']],
+            ['id' => 'booking_history.php', 'label' => 'سجل الحجوزات', 'icon' => 'history', 'url' => 'booking_history.php', 'roles' => ['admin', 'manager']],
         ];
 
         foreach ($nav_items as $item):

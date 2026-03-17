@@ -9,6 +9,7 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 require_once '../config/db_connect.php';
+require_once '../includes/functions.php';
 
 // Fetch blogs
 $stmt = $pdo->query("SELECT * FROM blogs ORDER BY created_at DESC");
@@ -113,9 +114,13 @@ $blogs = $stmt->fetchAll();
                                                 <a href="edit_blog.php?id=<?= $blog['id'] ?>" class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center hover:bg-blue-500/20 transition-all font-bold" title="تعديل">
                                                     <span class="material-symbols-outlined text-sm">edit</span>
                                                 </a>
-                                                <a href="delete_blog.php?id=<?= $blog['id'] ?>" onclick="return confirm('هل أنت متأكد من حذف هذا المقال نهائياً؟');" class="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500/20 transition-all font-bold" title="حذف">
-                                                    <span class="material-symbols-outlined text-sm">delete</span>
-                                                </a>
+                                                <form action="delete_blog.php" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف هذا المقال نهائياً؟');" class="inline">
+                                                    <input type="hidden" name="csrf_token" value="<?= get_csrf_token() ?>">
+                                                    <input type="hidden" name="id" value="<?= $blog['id'] ?>">
+                                                    <button type="submit" class="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500/20 transition-all font-bold" title="حذف">
+                                                        <span class="material-symbols-outlined text-sm">delete</span>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>

@@ -9,6 +9,7 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 require_once '../config/db_connect.php';
+require_once '../includes/functions.php';
 
 // Check ID
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -31,6 +32,14 @@ if (!$blog) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // CSRF Validation
+    if (empty($_POST) && $_SERVER['CONTENT_LENGTH'] > 0) {
+        die("لقد تجاوز حجم الملفات المرفوعة الحد المسموح به على السيرفر (post_max_size). يرجى تقليل حجم الصور أو رفع عدد أقل.");
+    }
+    if (!isset($_POST['csrf_token']) || !validate_csrf_token($_POST['csrf_token'])) {
+        die("CSRF token validation failed. Please refresh the page and try again.");
+    }
+
     $title = trim($_POST['title']);
     $author = trim($_POST['author']);
     $content = trim($_POST['content']);
@@ -128,7 +137,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
 
                 <div class="glass-card rounded-[2rem] p-8 md:p-12">
-                    <form action="" method="POST" enctype="multipart/form-data" class="space-y-8">
+                    <form action="" method="POST" enctype="multipart/form-data" class="space-y-8" onsubmit="return handleFormSubmit(event)">
+                        <input type="hidden" name="csrf_token" value="<?= get_csrf_token() ?>">
                         
                         <div class="grid md:grid-cols-2 gap-8">
                             <!-- Title -->
@@ -237,6 +247,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 preview.classList.add('hidden');
             }
+        }
+
+        // ── Image Compression ───────────────────────────────────────────
+        async function compressImage(file, maxWidth = 1200, quality = 0.7) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        canvas.toBlob((blob) => {
+                            resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+                        }, 'image/jpeg', quality);
+                    };
+                };
+            });
+        }
+
+        async function handleFormSubmit(event) {
+            const form = event.target;
+            const fileInputs = form.querySelectorAll('input[type="file"]');
+            let hasFiles = false;
+            
+            for (const input of fileInputs) {
+                if (input.files.length > 0) {
+                    hasFiles = true;
+                    break;
+                }
+            }
+            
+            if (hasFiles) {
+                event.preventDefault();
+                
+                // Show loading state
+                const btn = form.querySelector('button[type="submit"]');
+                btn.disabled = true;
+                btn.innerHTML = '<div class="flex items-center gap-2 justify-center"><span class="material-symbols-outlined animate-spin text-sm">sync</span><span>جاري ضغط الصور...</span></div>';
+
+                for (const input of fileInputs) {
+                    if (input.files.length > 0) {
+                        const dataTransfer = new DataTransfer();
+                        for (let i = 0; i < input.files.length; i++) {
+                            const file = input.files[i];
+                            if (file.type.startsWith('image/')) {
+                                const compressed = await compressImage(file);
+                                dataTransfer.items.add(compressed);
+                            } else {
+                                dataTransfer.items.add(file);
+                            }
+                        }
+                        input.files = dataTransfer.files;
+                    }
+                }
+                
+                form.submit();
+            }
+            return true;
         }
     </script>
 </body>

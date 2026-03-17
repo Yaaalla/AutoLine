@@ -3,7 +3,15 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>اوتو لاين لتاجير السيارات</title>
+    <title><?= isset($page_title) ? $page_title . " | اوتو لاين" : "اوتو لاين لتاجير السيارات" ?></title>
+    <meta name="description" content="<?= isset($meta_desc) ? htmlspecialchars($meta_desc) : "افضل خدمة تاجير سيارات في مصر - اوتو لاين تقدم لك تشكيلة واسعة من السيارات الحديثة والفاخرة بأسعار تنافسية." ?>"/>
+    <link rel="canonical" href="<?= (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" ?>"/>
+    
+    <!-- OpenGraph Tags -->
+    <meta property="og:title" content="<?= isset($page_title) ? $page_title : "اوتو لاين لتاجير السيارات" ?>"/>
+    <meta property="og:description" content="<?= isset($meta_desc) ? htmlspecialchars($meta_desc) : "افضل خدمة تاجير سيارات في مصر" ?>"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="<?= (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" ?>"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>

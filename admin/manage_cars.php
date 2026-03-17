@@ -11,36 +11,73 @@ require_once '../includes/functions.php';
 $success_msg = "";
 $error_msg = "";
 $admin_id = $_SESSION['admin_id'];
+
+// Migration: Ensure model_year column exists
+try {
+    $pdo->query("SELECT model_year FROM cars LIMIT 1");
+} catch (PDOException $e) {
+    if ($e->getCode() == '42S22') { // Column not found
+        $pdo->exec("ALTER TABLE cars ADD COLUMN model_year INT AFTER model");
+    }
+}
  
-// Delete Car Logic
+// CSRF Validation
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // If post_max_size is exceeded, $_POST will be empty but content-length will be > 0
+    if (empty($_POST) && $_SERVER['CONTENT_LENGTH'] > 0) {
+        die("لقد تجاوز حجم الملفات المرفوعة الحد المسموح به على السيرفر (post_max_size). يرجى تقليل حجم الصور أو رفع عدد أقل.");
+    }
+    if (!isset($_POST['csrf_token']) || !validate_csrf_token($_POST['csrf_token'])) {
+        $debug_info = "";
+        if (!isset($_POST['csrf_token'])) $debug_info .= " (Token missing from POST)";
+        if (!isset($_SESSION['csrf_token'])) $debug_info .= " (Token missing from SESSION)";
+        die("CSRF token validation failed" . $debug_info . ". Please refresh the page and try again.");
+    }
+}
 
 // Delete Car Logic
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     try {
-        $id = $_POST['delete_id'];
-        // Get car details for logging
+        $id = (int)$_POST['delete_id'];
+        
+        $pdo->beginTransaction();
+
+        // 1. Get main image and gallery images for cleanup
         $stmt = $pdo->prepare("SELECT brand, model, image_path FROM cars WHERE id = ?");
         $stmt->execute([$id]);
         $car = $stmt->fetch();
         
         if ($car) {
-            if (strpos($car['image_path'], 'uploads/cars/') !== false) {
-                $full_path = '../' . $car['image_path'];
-                if (file_exists($full_path)) {
-                    unlink($full_path);
+            $stmt_gallery = $pdo->prepare("SELECT image_path FROM car_images WHERE car_id = ?");
+            $stmt_gallery->execute([$id]);
+            $gallery_images = $stmt_gallery->fetchAll(PDO::FETCH_COLUMN);
+
+            // 2. Delete from DB first
+            $pdo->prepare("DELETE FROM car_images WHERE car_id = ?")->execute([$id]);
+            $pdo->prepare("DELETE FROM cars WHERE id = ?")->execute([$id]);
+
+            $pdo->commit();
+
+            // 3. Cleanup filesystem
+            if (!empty($car['image_path']) && strpos($car['image_path'], 'http') !== 0) {
+                @unlink('../' . $car['image_path']);
+            }
+            foreach ($gallery_images as $img) {
+                if (!empty($img) && strpos($img, 'http') !== 0) {
+                    @unlink('../' . $img);
                 }
             }
-
-            $stmt = $pdo->prepare("DELETE FROM cars WHERE id = ?");
-            $stmt->execute([$id]);
             
-            log_activity($pdo, $admin_id, "Deleted Vehicle", "Removed " . $car['brand'] . " " . $car['model'] . " from fleet.");
+            log_activity($pdo, $admin_id, "Deleted Vehicle", "Removed " . $car['brand'] . " " . $car['model'] . " and all associated images from fleet.");
             
-            $_SESSION['success'] = "Vehicle removed from fleet.";
+            $_SESSION['success'] = "Vehicle and its images removed from fleet.";
             header("Location: manage_cars.php");
             exit;
+        } else {
+            $pdo->rollBack();
         }
     } catch (Exception $e) {
+        if ($pdo->inTransaction()) $pdo->rollBack();
         $error_msg = "Error deleting vehicle: " . $e->getMessage();
     }
 }
@@ -58,56 +95,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_car'])) {
         $mileage = $_POST['mileage'];
         $car_condition = $_POST['car_condition'];
         $tire_condition = $_POST['tire_condition'];
-        $discount = isset($_POST['discount']) ? (int)$_POST['discount'] : 0;
+        $model_year = (int)$_POST['model_year'];
+        $discount = (!empty($_POST['discount'])) ? (int)$_POST['discount'] : 0;
         
         $image_path = $_POST['image_url']; 
 
+        // Secure file upload for main image
         if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] === UPLOAD_ERR_OK) {
-            $upload_dir = '../uploads/cars/';
-            if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
-            
-            $file_ext = pathinfo($_FILES['image_file']['name'], PATHINFO_EXTENSION);
-            $new_filename = uniqid('car_', true) . '.' . $file_ext;
-            if (move_uploaded_file($_FILES['image_file']['tmp_name'], $upload_dir . $new_filename)) {
-                $image_path = 'uploads/cars/' . $new_filename;
+            $upload = handle_secure_upload($_FILES['image_file'], '../uploads/cars/', 'car_');
+            if ($upload['success']) {
+                $image_path = 'uploads/cars/' . $upload['path'];
+            } else {
+                throw new Exception($upload['error']);
             }
         }
 
         if (empty($image_path)) throw new Exception("Please provide an image URL or upload a file.");
 
         $pdo->beginTransaction();
-        $stmt = $pdo->prepare("INSERT INTO cars (brand, model, price_per_day, seats, transmission, fuel_type, color, mileage, car_condition, tire_condition, image_path, discount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$brand, $model, $price, $seats, $transmission, $fuel, $color, $mileage, $car_condition, $tire_condition, $image_path, $discount]);
+        $stmt = $pdo->prepare("INSERT INTO cars (brand, model, model_year, price_per_day, seats, transmission, fuel_type, color, mileage, car_condition, tire_condition, image_path, discount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$brand, $model, $model_year, $price, $seats, $transmission, $fuel, $color, $mileage, $car_condition, $tire_condition, $image_path, $discount]);
         $new_car_id = $pdo->lastInsertId();
 
-        // Handle Multiple Additional Images
+        // Secure file upload for gallery images
         if (isset($_FILES['additional_images'])) {
             $files = $_FILES['additional_images'];
-            $upload_dir = '../uploads/cars/';
-            
             for ($i = 0; $i < count($files['name']); $i++) {
                 if ($files['error'][$i] === UPLOAD_ERR_OK) {
-                    $ext = pathinfo($files['name'][$i], PATHINFO_EXTENSION);
-                    $fname = uniqid('gallery_', true) . '.' . $ext;
-                    if (move_uploaded_file($files['tmp_name'][$i], $upload_dir . $fname)) {
-                        $img_path = 'uploads/cars/' . $fname;
+                    $file_data = [
+                        'name' => $files['name'][$i],
+                        'type' => $files['type'][$i],
+                        'tmp_name' => $files['tmp_name'][$i],
+                        'error' => $files['error'][$i],
+                        'size' => $files['size'][$i]
+                    ];
+                    $upload = handle_secure_upload($file_data, '../uploads/cars/', 'gallery_');
+                    if ($upload['success']) {
+                        $img_path = 'uploads/cars/' . $upload['path'];
                         $stmt_img = $pdo->prepare("INSERT INTO car_images (car_id, image_path) VALUES (?, ?)");
                         $stmt_img->execute([$new_car_id, $img_path]);
                     }
                 }
             }
         }
-
         $pdo->commit();
-        log_activity($pdo, $admin_id, "Added Vehicle", "Added new vehicle: $brand $model with multiple images.");
-
-        $_SESSION['success'] = "Vehicle added successfully!";
+        $_SESSION['success'] = "New vehicle added successfully.";
         header("Location: manage_cars.php");
         exit;
     } catch (Exception $e) {
-        $error_msg = "Error: " . $e->getMessage();
+        if ($pdo->inTransaction()) $pdo->rollBack();
+        $error_msg = "Error adding vehicle: " . $e->getMessage();
     }
 }
+
 
 if (isset($_SESSION['success'])) {
     $success_msg = $_SESSION['success'];
@@ -128,9 +168,9 @@ $query = "SELECT c.*, MAX(b.return_date) as last_return_date
 $params = [];
 
 if (!empty($search)) {
-    $query .= " AND (c.brand LIKE ? OR c.model LIKE ?)";
-    $params[] = "%$search%";
-    $params[] = "%$search%";
+    $query .= " AND (c.brand LIKE :search OR c.model LIKE :search_model)";
+    $params['search'] = "%$search%";
+    $params['search_model'] = "%$search%";
 }
 
 if (!empty($max_price)) {
@@ -349,7 +389,8 @@ $displayed_cars = count($cars);
                         </div>
 
                         <!-- Form Body -->
-                        <form method="POST" enctype="multipart/form-data" class="p-10 relative z-10">
+                        <form method="POST" enctype="multipart/form-data" class="p-10 relative z-10" onsubmit="return handleFormSubmit(event)">
+                            <input type="hidden" name="csrf_token" value="<?= get_csrf_token() ?>">
                             <input type="hidden" name="add_car" value="1">
 
                             <!-- Main Fields Grid -->
@@ -375,6 +416,10 @@ $displayed_cars = count($cars);
                                     <input type="text" name="tire_condition" placeholder="ممتازة" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-slate-100 focus:outline-none"/>
                                 </div>
                                 <div class="space-y-2">
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">سنة الموديل</label>
+                                    <input type="number" name="model_year" placeholder="2024" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-slate-100 focus:outline-none"/>
+                                </div>
+                                <div class="space-y-2">
                                     <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">السعر اليومي (ج.م)</label>
                                     <input type="number" name="price" placeholder="450" required class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-[#c9a96e] font-black focus:outline-none"/>
                                 </div>
@@ -398,7 +443,7 @@ $displayed_cars = count($cars);
                                     </select>
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">الخصم (%)</label>
+                                    <label class="block text-[9px] font-black text-slate-500 uppercase tracking-widest">الخصم (%) <span class="text-slate-600">(اختياري)</span></label>
                                     <input type="number" name="discount" placeholder="0" min="0" max="100" class="w-full input-premium rounded-xl px-5 py-3.5 text-sm text-emerald-500 font-bold focus:outline-none"/>
                                 </div>
                             </div>
@@ -517,7 +562,10 @@ $displayed_cars = count($cars);
                                         <div class="overflow-hidden">
                                             <p class="text-[10px] font-black text-[#c9a96e] uppercase tracking-[0.5em] mb-2 italic opacity-0 translate-y-4 group-hover:opacity-80 group-hover:translate-y-0 transition-all duration-500"><?= htmlspecialchars($car['brand']) ?></p>
                                         </div>
-                                        <h4 class="text-3xl font-black text-white tracking-tighter transition-all duration-700 group-hover:-translate-y-1"><?= htmlspecialchars($car['model']) ?></h4>
+                                        <h4 class="text-3xl font-black text-white tracking-tighter transition-all duration-700 group-hover:-translate-y-1">
+                                            <?= htmlspecialchars($car['model']) ?> 
+                                            <span class="text-[#c9a96e] text-lg font-bold ml-2"><?= $car['model_year'] ?></span>
+                                        </h4>
                                     </div>
                                 </div>
 
@@ -556,6 +604,7 @@ $displayed_cars = count($cars);
                                             تخصيص
                                         </a>
                                         <form method="POST" onsubmit="return confirm('هل أنت متأكد من حذف هذه الأيقونة من الأسطول؟');" class="flex-none">
+                                            <input type="hidden" name="csrf_token" value="<?= get_csrf_token() ?>">
                                             <input type="hidden" name="delete_id" value="<?= $car['id'] ?>">
                                             <button type="submit" class="w-14 h-14 rounded-2xl bg-red-500/5 hover:bg-red-500/10 text-red-500/50 hover:text-red-500 flex items-center justify-center transition-all duration-500 group/del">
                                                 <span class="material-symbols-outlined text-xl group-hover/del:scale-125 transition-all">delete_outline</span>
@@ -629,6 +678,79 @@ $displayed_cars = count($cars);
         document.querySelectorAll('[role="alert"]').forEach(alert => {
             setTimeout(() => { alert.style.display = 'none'; }, 5000);
         });
+
+        // ── Image Compression ───────────────────────────────────────────
+        async function compressImage(file, maxWidth = 1200, quality = 0.7) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        canvas.toBlob((blob) => {
+                            resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+                        }, 'image/jpeg', quality);
+                    };
+                };
+            });
+        }
+
+        async function handleFormSubmit(event) {
+            const form = event.target;
+            const fileInputs = form.querySelectorAll('input[type="file"]');
+            let hasFiles = false;
+            
+            for (const input of fileInputs) {
+                if (input.files.length > 0) {
+                    hasFiles = true;
+                    break;
+                }
+            }
+            
+            if (hasFiles) {
+                event.preventDefault();
+                
+                // Show loading state
+                const btn = form.querySelector('button[type="submit"]');
+                const originalText = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<div class="flex items-center gap-2"><span class="material-symbols-outlined animate-spin text-sm">sync</span><span>جاري ضغط الصور...</span></div>';
+
+                for (const input of fileInputs) {
+                    if (input.files.length > 0) {
+                        const dataTransfer = new DataTransfer();
+                        for (let i = 0; i < input.files.length; i++) {
+                            const file = input.files[i];
+                            if (file.type.startsWith('image/')) {
+                                const compressed = await compressImage(file);
+                                dataTransfer.items.add(compressed);
+                            } else {
+                                dataTransfer.items.add(file);
+                            }
+                        }
+                        input.files = dataTransfer.files;
+                    }
+                }
+                
+                form.submit();
+            }
+            return true;
+        }
     </script>
 </body>
 </html>

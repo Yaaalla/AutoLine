@@ -16,8 +16,9 @@ if (!$blog) {
     exit;
 }
 
-// Fetch latest 3 for sidebar
-$sidebar_stmt = $pdo->query("SELECT * FROM blogs WHERE id != $id ORDER BY created_at DESC LIMIT 3");
+// Fetch latest 3 for sidebar (Secured with prepared statement)
+$sidebar_stmt = $pdo->prepare("SELECT * FROM blogs WHERE id != ? ORDER BY created_at DESC LIMIT 3");
+$sidebar_stmt->execute([$id]);
 $recent_blogs = $sidebar_stmt->fetchAll();
 
 include 'includes/header.php'; 
@@ -53,7 +54,10 @@ include 'includes/header.php';
                 </p>
                 
                 <div class="text-slate-700 dark:text-slate-300 leading-loose space-y-6">
-                    <?= $blog['content'] // Outputs HTML safely if inputted from tinymce or retains formatting. Ensure trusted input only. ?>
+                    <?php 
+                        $allowed_tags = '<h1><h2><h3><h4><h5><h6><p><br><strong><em><ul><ol><li><blockquote><span><div><img>';
+                        echo strip_tags($blog['content'], $allowed_tags);
+                    ?>
                 </div>
             </div>
         </div>

@@ -9,14 +9,24 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 require_once '../config/db_connect.php';
+require_once '../includes/functions.php';
 
-if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: manage_blogs.php");
+    exit;
+}
+
+if (!isset($_POST['csrf_token']) || !validate_csrf_token($_POST['csrf_token'])) {
+    die("CSRF token validation failed.");
+}
+
+if (!isset($_POST['id']) || !is_numeric($_POST['id'])) {
     $_SESSION['error'] = "معرف المقال غير صالح.";
     header("Location: manage_blogs.php");
     exit;
 }
 
-$id = (int)$_GET['id'];
+$id = (int)$_POST['id'];
 
 try {
     // First retrieve image path to delete it

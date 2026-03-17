@@ -31,10 +31,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($pickup) || empty($return) || empty($name) || empty($email) || empty($phone)) {
             throw new Exception("يرجى ملء جميع الحقول");
         }
-        
-        // Calculate total price
+
+        // Date Validation
+        $now = new DateTime('today');
         $p_date = new DateTime($pickup);
         $r_date = new DateTime($return);
+
+        if ($p_date < $now) {
+            throw new Exception("تاريخ الاستلام لا يمكن أن يكون في الماضي");
+        }
+        if ($r_date <= $p_date) {
+            throw new Exception("تاريخ العودة يجب أن يكون بعد تاريخ الاستلام");
+        }
+
+        // Availability Check
+        if (!is_car_available($pdo, $car_id, $pickup, $return)) {
+            throw new Exception("عذراً، هذه السيارة محجوزة بالفعل خلال هذه الفترة. يرجى اختيار تاريخ آخر.");
+        }
+        
+        // Calculate total price
         $days = $r_date->diff($p_date)->days ?: 1;
         
         $daily_price = $car['price_per_day'];
@@ -54,8 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'total_price' => $total
         ];
         
-        // حفظ في قاعدة البيانات
-        $insert = $pdo->prepare("INSERT INTO bookings (car_id, customer_name, customer_email, customer_phone, pickup_date, return_date, total_price) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        // حفظ في قاعدة البيانات (حالة 'pending')
+        $insert = $pdo->prepare("INSERT INTO bookings (car_id, customer_name, customer_email, customer_phone, pickup_date, return_date, total_price, status) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')");
         $insert->execute([$car_id, $name, $email, $phone, $pickup, $return, $total]);
 
         // إرسال البريد الإلكتروني للعميل
@@ -122,11 +137,11 @@ include 'includes/header.php';
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-[10px] font-black uppercase tracking-widest text-primary mb-2">تاريخ الاستلام</label>
-                                <input type="date" name="pickup_date" required class="w-full bg-slate-100 dark:bg-surface border-0 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary transition-all"/>
+                                <input type="date" name="pickup_date" required min="<?= date('Y-m-d') ?>" class="w-full bg-slate-100 dark:bg-surface border-0 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary transition-all"/>
                             </div>
                             <div>
                                 <label class="block text-[10px] font-black uppercase tracking-widest text-primary mb-2">تاريخ العودة</label>
-                                <input type="date" name="return_date" required class="w-full bg-slate-100 dark:bg-surface border-0 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary transition-all"/>
+                                <input type="date" name="return_date" required min="<?= date('Y-m-d', strtotime('+1 day')) ?>" class="w-full bg-slate-100 dark:bg-surface border-0 rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary transition-all"/>
                             </div>
                         </div>
                         <button type="submit" class="w-full bg-primary text-background-dark py-4 rounded-xl font-black uppercase tracking-widest hover:bg-white transition-all shadow-xl shadow-primary/20">
@@ -141,8 +156,8 @@ include 'includes/header.php';
                     <div class="flex gap-4 mb-6 pb-6 border-b border-primary/5">
                         <img src="<?= htmlspecialchars($car['image_path']) ?>" class="w-24 h-16 object-cover rounded-lg"/>
                         <div>
-                            <p class="text-xs font-bold text-primary"><?= $car['brand'] ?></p>
-                            <p class="font-black"><?= $car['model'] ?></p>
+                            <p class="text-xs font-bold text-primary"><?= htmlspecialchars($car['brand']) ?></p>
+                            <p class="font-black"><?= htmlspecialchars($car['model']) ?></p>
                         </div>
                     </div>
                     <div class="space-y-4">

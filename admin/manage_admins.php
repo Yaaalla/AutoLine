@@ -13,7 +13,15 @@ $error_msg = "";
 $admin_id = $_SESSION['admin_id'];
 
 // Add Admin
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_admin'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (empty($_POST) && $_SERVER['CONTENT_LENGTH'] > 0) {
+        die("لقد تجاوز حجم الملفات المرفوعة الحد المسموح به على السيرفر (post_max_size). يرجى تقليل حجم الصور أو رفع عدد أقل.");
+    }
+    if (!isset($_POST['csrf_token']) || !validate_csrf_token($_POST['csrf_token'])) {
+        die("CSRF token validation failed. Please refresh the page and try again.");
+    }
+
+    if (isset($_POST['add_admin'])) {
     try {
         $username = $_POST['username'];
         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
@@ -31,10 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_admin'])) {
     } catch (Exception $e) {
         $error_msg = "Error adding admin: " . $e->getMessage();
     }
-}
-
-// Delete Admin
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
+    }
+    // Delete Admin
+    if (isset($_POST['delete_id'])) {
     try {
         $del_id = $_POST['delete_id'];
         if ($del_id == $admin_id) throw new Exception("You cannot delete yourself.");
@@ -53,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
         }
     } catch (Exception $e) {
         $error_msg = $e->getMessage();
+    }
     }
 }
 
@@ -182,6 +190,7 @@ $admins = $pdo->query("SELECT * FROM admins ORDER BY created_at DESC")->fetchAll
                                             <td class="px-10 py-8 text-left">
                                                 <?php if ($a['id'] != $admin_id): ?>
                                                     <form method="POST" onsubmit="return confirm('إزالة هذا المسؤول من النظام؟');" class="inline-block">
+                                                        <input type="hidden" name="csrf_token" value="<?= get_csrf_token() ?>">
                                                         <input type="hidden" name="delete_id" value="<?= $a['id'] ?>">
                                                         <button type="submit" class="w-10 h-10 rounded-xl bg-red-500/5 hover:bg-red-500/10 text-red-500 flex items-center justify-center transition-all border border-red-500/20 group/del" title="حذف المسؤول">
                                                             <span class="material-symbols-outlined text-sm group-hover/del:scale-110 transition-transform">delete</span>
@@ -210,6 +219,7 @@ $admins = $pdo->query("SELECT * FROM admins ORDER BY created_at DESC")->fetchAll
                             </h3>
 
                             <form method="POST" class="space-y-6">
+                                <input type="hidden" name="csrf_token" value="<?= get_csrf_token() ?>">
                                 <input type="hidden" name="add_admin" value="1">
                                 
                                 <div class="space-y-2">
