@@ -1,9 +1,12 @@
 <?php
-session_start();
-require_once '../config/db_connect.php';
+require_once __DIR__ . '/../config/config.php';
 
 $error = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    [$sessionOk, $sessionReason] = ensure_session_writable();
+    if (!$sessionOk) {
+        $error = "خطأ في السيرفر: تعذر كتابة ملف السيشن. " . $sessionReason;
+    } else {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
@@ -29,10 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: dashboard.php");
             exit;
         } else {
-            $error = "Invalid username or password";
+            $error = "كلمة المرور غير صحيحة";
         }
     } else {
-        $error = "Invalid username or password";
+        $error = "اسم المستخدم غير صحيح";
+    }
     }
 }
 ?>
